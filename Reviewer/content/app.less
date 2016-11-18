@@ -1,0 +1,590 @@
+// Core variables and mixins
+@import "bootstrap\variables.less";
+@import "variables.less";
+@import "bootstrap\mixins.less";
+
+// Reset
+@import "bootstrap\normalize.less";
+@import "bootstrap\print.less";
+
+// Core CSS
+@import "bootstrap\scaffolding.less";
+@import "bootstrap\type.less";
+@import "bootstrap\code.less";
+@import "bootstrap\grid.less";
+@import "bootstrap\tables.less";
+@import "bootstrap\forms.less";
+@import "bootstrap\buttons.less";
+
+// Components
+@import "bootstrap\component-animations.less";
+@import "bootstrap\glyphicons.less";
+@import "bootstrap\dropdowns.less";
+@import "bootstrap\button-groups.less";
+@import "bootstrap\input-groups.less";
+@import "bootstrap\navs.less";
+@import "bootstrap\navbar.less";
+@import "bootstrap\breadcrumbs.less";
+@import "bootstrap\pagination.less";
+@import "bootstrap\pager.less";
+@import "bootstrap\labels.less";
+@import "bootstrap\badges.less";
+@import "bootstrap\jumbotron.less";
+@import "bootstrap\thumbnails.less";
+@import "bootstrap\alerts.less";
+@import "bootstrap\progress-bars.less";
+@import "bootstrap\media.less";
+@import "bootstrap\list-group.less";
+@import "bootstrap\panels.less";
+@import "bootstrap\wells.less";
+@import "bootstrap\close.less";
+
+// Components w/ JavaScript
+@import "bootstrap\modals.less";
+@import "bootstrap\tooltip.less";
+@import "bootstrap\popovers.less";
+@import "bootstrap\carousel.less";
+
+// Utility classes
+@import "bootstrap\utilities.less";
+@import "bootstrap\responsive-utilities.less";
+
+html, body {
+     min-height: 100%;
+    height: 100%;
+    font-family:Verdana, Geneva, sans-serif;
+}
+
+md-input-container .md-errors-spacer{
+ min-height: 0px !important;
+}
+
+button, html, input, select, textarea {
+    font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+
+html{
+    min-height:100%;/* make sure it is at least as tall as the viewport */
+    position:relative;
+}
+body{
+    height:100%; /* force the BODY element to match the height of the HTML element */
+}
+
+md-toolbar{
+    background-color:#FF4081 !important;
+    color:white !important;
+    font-weight:700;
+    min-height: 44px !important;
+    height: 50px;
+}
+
+.indexPage{
+      overflow-x: hidden;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      height:100%;
+      background-color:#FF4081;
+}
+
+.indexPage.gray{
+    background-color:rgb(250,250,250);
+}
+
+.indexPage.join{
+    background-color: #FF9800 !important;
+}
+
+.indexPage .mainLogo{
+    text-align:center;
+}
+
+.indexPage .mainLogo img{
+    padding-top:50px;
+    width:650px;
+}
+
+.indexPage.join .mainLogo img{
+    padding-top:50px;
+    width:450px;
+}
+
+@media (max-width: 768px) {
+    .indexPage .mainLogo{
+    text-align:center;
+    }
+
+    .indexPage .mainLogo img{
+        padding-top:50px;
+        width:350px;
+    }
+
+    .indexPage.join .mainLogo img{
+        padding-top:50px;
+        width:250px;
+    }
+}
+
+.logoNavBar{
+    background-image:url(../Images/logo.png);
+    width:200px;
+    height:200px;
+}
+
+.whiteBackground{
+    border:1px #fff;
+    background-color:#fff;
+    border-radius:6px;
+    margin-top:10px;
+    padding:5px;
+}
+
+ .noPadding{
+    padding:0!important;
+}
+
+ .evenButton{
+     width:250px !important;
+ }
+
+.frontButton{
+    height:100px;
+    width:250px;
+    font-weight:800;
+}
+
+.joinButton{
+    background: #FF9800 !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.dashboardButton{
+    background: #B23AEE !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+
+.createButton{
+    background: #4CAF50 !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.voteButton{
+    background: #4CAF50 !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.continueButton{
+    background: #E040FB !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.updateVoteButton{
+    background: rgb(233, 30, 99)  !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.bluebutton{
+    background: #6666ff !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.topBar {
+    font-size:16px;
+    font-weight:800;
+    color:white;
+    background-color:#1e1e1e !important;
+}
+
+.md-avatar{
+    height:50px !important;
+    width:50px !important;
+}
+
+.roomTv .singleBeer{
+    border-right:1px solid;
+    border-bottom:1px solid;
+    min-height:70px;
+}
+
+.listdemoBasicUsage md-divider {
+  margin-top: 10px;
+  margin-bottom: 0; }
+
+
+.inputdemoIcons .inputIconDemo {
+    min-height: 48px; }
+  .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.email {
+    color: green; }
+  .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.name {
+    color: dodgerblue; }
+  .inputdemoIcons md-input-container.md-input-invalid > md-icon.email,
+  .inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
+    color: red; }
+
+
+  .roomSetup{
+      min-height:100%;/* make sure it is at least as tall as the viewport */
+      position:relative;
+  }
+ 
+.center{
+    text-align:center !important;
+}
+
+.left{
+    text-align:left !important;
+}
+
+ .right{
+     text-align:right !important;
+ }
+
+ .userScreen.tv{
+    height: 100%;
+    overflow: hidden;
+ }
+
+ .userScreen .dashboardContainer{
+     height:95%;
+ }
+ .scrollY{
+     overflow-y:auto;
+ }
+
+
+.scrollY::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px #FF9800;
+	background-color: #F5F5F5;
+}
+
+.scrollY::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.scrollY::-webkit-scrollbar-thumb
+{
+	background-color: #FF9800;
+}
+
+
+ .userScreen .dashboard{
+     color:#7e7e7e;
+ }
+
+.userScreen .userBeerRow{
+    padding-top:10px;
+    padding-bottom:10px;
+    border-bottom: 1px solid #696969;
+    cursor:pointer;
+}
+.userScreen .userBeerRow h3{
+    
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    margin: 0;
+    line-height: 1.2em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.userScreen .userBeerRow h4{
+    font-size: 14px;
+    letter-spacing: .01em;
+    margin: 3px 0 1px;
+    font-weight: 400;
+    line-height: 1.2em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+.userScreen .userBeerRow p{
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .01em;
+    margin: 0;
+    line-height: 1.6em;
+}
+
+.userScreen .userBeerRow .alcPercent{
+    font-size:9px;
+    font-weight:800;
+    margin-top:7px;
+    overflow:visible;
+    white-space: nowrap;
+}
+
+.userScreen .userBeerRow .alcPercent.user{
+    margin-top:70px;
+}
+
+.userScreen .userBeerRow .ibu{
+    font-size:12px;
+    font-weight:800;
+    margin-top: 10px;
+}
+
+.userScreen .userBeerRow .reviewContainer{
+    border-top: 1px solid #d3d3d3;
+    margin-top:10px;
+}
+
+.userScreen .userBeerRow .reviewRow{
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.userScreen .userBeerRow .total{
+    border-top:2px solid;
+    font-size:16px;
+    padding-top:7px;
+    font-weight:800;
+    margin-top:10px;
+}
+
+.userScreen .userBeerRow .total .score{
+    text-align:right;
+    padding-right:10px;
+}
+
+.userScreen .userBeerRow .text{
+    margin-top: 5px;
+    font-style:italic;
+}
+
+.userScreen .userBeerRow md-select{
+    margin:0;
+}
+
+.dashboard{
+    height:95%;
+    border-right:1px solid;
+}
+
+.dashboard .reviewContainer div{
+    margin-top:10px;
+}
+
+.dashboard .comment{
+    font-size:12px;
+    font-style:italic;
+    background-color:#fff !important;
+}
+
+.dashboard .reviewsRow{
+    padding-top:3px;
+    padding-bottom:3px;
+    border-bottom: 1px solid #696969;
+}
+
+.dashboard .beerinfo{
+    min-height:83px;
+}
+
+.dashboard.ranking .beerRank{
+    position:absolute;
+    left:-10px;
+    top:-10px;
+    font-weight:800;
+}
+
+.dashboard.ranking .finalScore{
+    margin-top:30px;
+    color:black;
+    font-size:16px;
+    font-weight:800;
+    text-align:right;
+}
+
+.dashboard .table{
+    font-size: 15px;
+}
+
+.dashboard .table td{
+    padding:2px;
+}
+
+.dashboard .table .smaller td{
+    font-size:12px;
+}
+
+.dashboard.current{
+    text-align:center;
+    background-color:#2a2a2a;
+    color:white;
+    font-weight:800;
+    overflow-x:hidden;
+}
+
+.dashboard.current .name{
+    font-size:20px;
+    margin-top:15px;
+}
+
+.dashboard.current img{
+    box-shadow: 0px 0px 5px #fff;
+    border-radius:6px;
+}
+
+.dashboard.current .manufacturer{
+    font-size:18px;
+    font-style:italic;
+    margin-top:15px;
+}
+
+.dashboard.current .final{
+    margin-top:25px;
+    font-size:40px;
+    display:none;
+}
+
+.dashboard.current .currentRanking{
+    display:none;
+}
+
+.dashboard.current .ratingResult{
+    font-size:26px;
+}
+
+.dashboard.current .ratingHeader{
+    margin-top:25px;
+    font-size:30px;
+}
+
+.dashboard.current .success{
+    color:#00b200;
+    display:none;
+}
+
+.dashboard.current .error{
+    color:#FF9494;
+    display:none;
+}
+
+.avatar{
+    border-radius:50%;
+    width: 60px;
+    margin-top:5px;
+    position: absolute; 
+    left: 9px;
+    top: -2px;
+}
+
+.avatar.userAvatar{
+    left: 16px !important;
+    top: 0px !important;
+
+}
+
+.beerRow{
+    padding:5px;
+} 
+
+.borderBottom{
+    border-bottom:1px solid;
+}
+
+.borderBottom.last{
+    border-bottom:none !important;
+}
+
+.beerRow .beerName{
+    font-weight:800;
+}
+
+.beerRow .description{
+    margin-top:5px;
+}
+
+.totalValue.red {
+    color:@btn-danger-bg;
+}
+
+.totalValue.green {
+    color:@btn-success-bg;
+}
+
+.dashboardInfo{
+    font-style:italic;
+    font-weight:700;
+    border-bottom:1px solid;
+}
+
+.btn:focus,.btn:active {
+   outline: none !important;
+}
+
+div:focus {
+    outline:none;
+}
+
+
+.heart {
+	font-size: 150px;
+
+	-webkit-animation: beat .40s infinite alternate;
+	-moz-animation: beat .40s infinite alternate;
+	-ms-animation: beat .40s infinite alternate;
+	-o-animation: beat .40s infinite alternate;
+	animation: beat .40s infinite alternate;
+
+	-webkit-transform-origin: center;
+	-moz-transform-origin: center;
+	-o-transform-origin: center;
+	-ms-transform-origin: center;
+	transform-origin: center;
+}
+
+
+@keyframes "beat" {
+ to {
+    -webkit-transform: scale(1.4);
+   	-moz-transform: scale(1.4);
+   	-o-transform: scale(1.4);
+   	-ms-transform: scale(1.4);
+   	transform: scale(1.4);
+ }
+
+}
+
+@-moz-keyframes beat {
+ to {
+   -moz-transform: scale(1.4);
+   transform: scale(1.4);
+ }
+
+}
+
+@-webkit-keyframes "beat" {
+ to {
+   -webkit-transform: scale(1.4);
+   transform: scale(1.4);
+ }
+
+}
+
+@-ms-keyframes "beat" {
+ to {
+   -ms-transform: scale(1.4);
+   transform: scale(1.4);
+ }
+
+}
+
+@-o-keyframes "beat" {
+ to {
+   -o-transform: scale(1.4);
+   transform: scale(1.4);
+ }
+
+} 

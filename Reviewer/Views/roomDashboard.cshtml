@@ -1,0 +1,545 @@
+﻿<div class="row indexPage gray">
+    <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                <a href="/"><img style="margin-left: 5px;" src="~/Images/icons/home-2-24.png" /></a>
+            </md-button>
+            <span flex></span>
+            Room Setup
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <div ng-cloak>
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Pick Your Beers">
+                    <md-content class="md-padding">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="selectedBeers.length > 0">
+                                    <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                                        <section>
+                                            <div layout="row" layout-wrap flex="100" ng-repeat="beer in selectedBeers" class="beerRow borderBottom" ng-class="{'last':$last}">
+                                                <div flex=" 5"><h2>{{$index + 1}}</h2></div>
+                                                <div flex="10"><img src="{{beer.lableSM}}" width="55" /></div>
+                                                <div flex="30">
+                                                    <div class="beerName">{{beer.name}}</div>
+                                                    <div>{{beer.brewery.name}}</div>
+                                                    <div>{{beer.type}} </div>
+                                                </div>
+                                                <div flex="30">
+                                                    <div><b>ABV:</b> {{beer.percent}}%</div>
+                                                    <div><b>IBU:</b> <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span></div>
+                                                    <div><b>Utapped Rating:</b><span ng-if="beer.untappedRating != -1">{{beer.untappedRating}}</span><span ng-if="beer.untappedRating == -1">N/A</span></div>
+                                                </div>
+                                                <div flex="25">
+                                                    <md-button class="md-raised md-primary joinButton pull-right" ng-click="RemoveBeer(beer)">Remove</md-button>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </md-content>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-10 picking">
+                                <div class="col-lg-12">
+                                    <h3 class="center">Find the beers you want and add them to your room</h3>
+                                    <div class="center">If you cannot find the beer you are looking for then please write the brewery and the beer name and we will probably find it for you.</div>
+                                </div>
+                                <div class="col-lg-offset-1 col-lg-4">
+                                    <md-input-container class="md-block">
+                                        <label>Brewery</label>
+                                        <md-select ng-model="search.brevery" md-selected-text="getSelectedText()" ng-change="GetBreweryeBeers(search.brevery)">
+                                            <md-optgroup label="Breveries">
+                                                <md-option ng-value="brewery.id" ng-repeat="brewery in breweries"><img src="{{brewery.lable}}" width="40" /> {{brewery.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-lg-4">
+                                    <md-input-container class="md-block" ng-show="breweryNotListed">
+                                        <input ng-model="search.breweryName" type="text" placeholder="Brewery name">
+                                        <div class="ng-messag"></div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block">
+                                        <input ng-model="search.beerName" type="text" placeholder="Beer name">
+                                        <div class="ng-messag"></div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-lg-1 searchButton" style="margin-top: 7px;">
+                                    <md-button class="md-raised md-primary joinButton" ng-click="SearchForBeers(search)">Search</md-button>
+                                </div>
+                                <div class="col-lg-1 center">
+                                    <md-progress-circular class="md-hue-2" md-diameter="20px" style="margin-left: 25px; margin-top: 20px;" ng-if="loadingBeers"></md-progress-circular>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="beers.length > 0">
+                                <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                                    <section>
+                                        <div layout="row" layout-wrap flex="100" ng-repeat="beer in beers" class="beerRow borderBottom" ng-class="{'last':$last}">
+                                            <div flex="10"><img src="{{beer.lableSM}}" width="55" /></div>
+                                            <div flex="30">
+                                                <div class="beerName">{{beer.name}}</div>
+                                                <div>{{beer.brewery.name}}</div>
+                                                <div>{{beer.type}} </div>
+                                            </div>
+                                            <div flex="30">
+                                                <div><b>ABV:</b> {{beer.percent}}% </div>
+                                                <div><b>IBU:</b> <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span></div>
+                                                <div><b>Utapped Rating:</b><span ng-if="beer.IBU != -1">{{beer.untappedRating}}</span><span ng-if="beer.IBU == -1">N/A</span></div>
+                                            </div>
+                                            <div flex="30">
+                                                <md-button class="md-raised md-primary joinButton pull-right" ng-click="SelectBeer(beer)">Add</md-button>
+                                                <md-button class="md-raised md-primary joinButton pull-right" slide-toggle="#row_{{$index}}">Desc.</md-button>
+                                            </div>
+                                            <div flex="100" id="row_{{$index}}" class="slideable description" duration="0.3s">
+                                                <div flex="100" flex-offset="10">
+                                                    <div><b>Description</b></div>
+                                                    <div>
+                                                        {{beer.description}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </md-content>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Pick Rating Categories">
+                    <md-content class="md-padding">
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-10 picking">
+                                <div class="center">
+                                    <h3 class="center">Pick how you want to rate your beers</h3>
+                                    <div>If you cannot find the category you want, then you can add it.</div>
+                                    <div>Note max value of all category has to sum 100.</div>
+                                </div>
+                                <div class="col-lg-offset-1 col-lg-4">
+                                    <md-input-container class="md-block">
+                                        <label>Category</label>
+                                        <md-select ng-model="review.type" md-selected-text="getSelectedTextForCategory()" ng-change="CategoryChange()">
+                                            <md-optgroup label="Breveries">
+                                                <md-option ng-value="type.id" ng-repeat="type in reviewTypes">{{type.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-lg-4">
+                                    <md-input-container class="md-block">
+                                        <input ng-model="review.maxValue" type="text" placeholder="Max rating value">
+                                        <div class="ng-messag"></div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-lg-1 searchButton" style="margin-top: 7px;">
+                                    <md-button class="md-raised md-primary joinButton pull-right" ng-click="SelectCategory(review)">Add</md-button>
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="selectedCategories.length > 0">
+                            <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                                <section>
+                                    <div layout="row" layout-wrap flex="100" ng-repeat="category in selectedCategories" class="borderBottom">
+                                        <div flex=" 5"><h4>{{$index + 1}}</h4></div>
+                                        <div flex="45">
+                                            <h4 class="categoryName">{{category.name}}</h4>
+                                        </div>
+                                        <div flex="25">
+                                            <md-input-container class="md-block">
+                                                <input ng-model="category.maxValue" type="text" placeholder="Max rating value">
+                                                <div class="ng-messag"></div>
+                                            </md-input-container>
+                                        </div>
+                                        <div flex="25">
+                                            <md-button class="md-raised md-primary joinButton pull-right" ng-click="RemoveCategory(category)">Remove</md-button>
+                                        </div>
+                                    </div>
+                                    <div layout="row" layout-wrap flex="100" class="beerRow borderBottom last" layout-align="right right">
+                                        <div flex="100"><h4>Total Value: <span class="totalValue" ng-class="{green: GetTotal() == 100, red: GetTotal() != 100}">{{GetTotal()}}</span></h4></div>
+                                    </div>
+                                </section>
+                            </md-content>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Finish">
+                    <md-content class="md-padding center">
+                        <h1 class="md-display-2">Finish Your Room Cration!</h1>
+                        <md-button class="evenButton md-raised md-primary joinButton" ng-click="FinshCreation()">Create</md-button>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+    @*<div class="row">
+        <div class="col-lg-offset-1 col-lg-10">
+            <div class="center col-lg-12">
+                <h4 class="center">Your room is almost ready. Now you only need to select your beers and how you want to rate them!</h4>
+                <md-button class="evenButton md-raised md-primary createButton" ng-click="type = 'pickingBeer'">Pick Your Beers</md-button>
+                <md-button class="evenButton md-raised md-primary bluebutton" ng-click="type = 'pickingCategories'">Pick Rating Categories</md-button>
+                <md-button class="evenButton md-raised md-primary joinButton" ng-click="FinshCreation()">Finish</md-button>
+            </div>
+        </div>
+    </div>*@
+    @*<div ng-if="type == 'pickingBeer'">
+        <div class="row">
+            <div class="col-lg-12">
+                <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="selectedBeers.length > 0">
+                    <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                        <section>
+                            <div layout="row" layout-wrap flex="100" ng-repeat="beer in selectedBeers" class="beerRow borderBottom" ng-class="{'last':$last}">
+                                <div flex=" 5"><h2>{{$index + 1}}</h2></div>
+                                <div flex="10"><img src="{{beer.lableSM}}" width="55" /></div>
+                                <div flex="30">
+                                    <div class="beerName">{{beer.name}}</div>
+                                    <div>{{beer.brewery.name}}</div>
+                                    <div>{{beer.type}} </div>
+                                </div>
+                                <div flex="30">
+                                    <div><b>ABV:</b> {{beer.percent}}%</div>
+                                    <div><b>IBU:</b> <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span></div>
+                                    <div><b>Utapped Rating:</b><span ng-if="beer.untappedRating != -1">{{beer.untappedRating}}</span><span ng-if="beer.untappedRating == -1">N/A</span></div>
+                                </div>
+                                <div flex="25">
+                                    <md-button class="md-raised md-primary joinButton pull-right" ng-click="RemoveBeer(beer)">Remove</md-button>
+                                </div>
+                            </div>
+                        </section>
+                    </md-content>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10 picking">
+                <div class="col-lg-12">
+                    <h3 class="center">Find the beers you want and add them to your room</h3>
+                    <div class="center">If you cannot find the beer you are looking for then please write the brewery and the beer name and we will probably find it for you.</div>
+                </div>
+                <div class="col-lg-offset-1 col-lg-4">
+                    <md-input-container class="md-block">
+                        <label>Brewery</label>
+                        <md-select ng-model="search.brevery" md-selected-text="getSelectedText()" ng-change="GetBreweryeBeers(search.brevery)">
+                            <md-optgroup label="Breveries">
+                                <md-option ng-value="brewery.id" ng-repeat="brewery in breweries"><img src="{{brewery.lable}}" width="40" /> {{brewery.name}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div class="col-lg-4">
+                    <md-input-container class="md-block" ng-show="breweryNotListed">
+                        <input ng-model="search.breweryName" type="text" placeholder="Brewery name">
+                        <div class="ng-messag"></div>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <input ng-model="search.beerName" type="text" placeholder="Beer name">
+                        <div class="ng-messag"></div>
+                    </md-input-container>
+                </div>
+                <div class="col-lg-1 searchButton" style="margin-top: 7px;">
+                    <md-button class="md-raised md-primary joinButton" ng-click="SearchForBeers(search)">Search</md-button>
+                </div>
+                <div class="col-lg-1 center">
+                    <md-progress-circular class="md-hue-2" md-diameter="20px" style="margin-left: 25px; margin-top: 20px;" ng-if="loadingBeers"></md-progress-circular>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="beers.length > 0">
+                <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                    <section>
+                        <div layout="row" layout-wrap flex="100" ng-repeat="beer in beers" class="beerRow borderBottom" ng-class="{'last':$last}">
+                            <div flex="10"><img src="{{beer.lableSM}}" width="55" /></div>
+                            <div flex="30">
+                                <div class="beerName">{{beer.name}}</div>
+                                <div>{{beer.brewery.name}}</div>
+                                <div>{{beer.type}} </div>
+                            </div>
+                            <div flex="30">
+                                <div><b>ABV:</b> {{beer.percent}}% </div>
+                                <div><b>IBU:</b> <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span></div>
+                                <div><b>Utapped Rating:</b><span ng-if="beer.IBU != -1">{{beer.untappedRating}}</span><span ng-if="beer.IBU == -1">N/A</span></div>
+                            </div>
+                            <div flex="30">
+                                <md-button class="md-raised md-primary joinButton pull-right" ng-click="SelectBeer(beer)">Add</md-button>
+                                <md-button class="md-raised md-primary joinButton pull-right" slide-toggle="#row_{{$index}}">Desc.</md-button>
+                            </div>
+                            <div flex="100" id="row_{{$index}}" class="slideable description" duration="0.3s">
+                                <div flex="100" flex-offset="10">
+                                    <div><b>Description</b></div>
+                                    <div>
+                                        {{beer.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </md-content>
+            </div>
+        </div>
+    </div>*@
+        <div ng-if="type == 'pickingCategories'">
+            <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="selectedCategories.length > 0">
+                <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                    <section>
+                        <div layout="row" layout-wrap flex="100" ng-repeat="category in selectedCategories" class="borderBottom" >
+                            <div flex=" 5"><h4>{{$index + 1}}</h4></div>
+                            <div flex="45">
+                                <h4 class="categoryName">{{category.name}}</h4>
+                            </div>
+                            <div flex="25">
+                                <md-input-container class="md-block">
+                                    <input ng-model="category.maxValue" type="text" placeholder="Max rating value">
+                                    <div class="ng-messag"></div>
+                                </md-input-container>
+                            </div>
+                            <div flex="25">
+                                <md-button class="md-raised md-primary joinButton pull-right" ng-click="RemoveCategory(category)">Remove</md-button>
+                            </div>
+                        </div>
+                        <div layout="row" layout-wrap flex="100" class="beerRow borderBottom last">
+                            <div flex="100"><h4>Total Value: <span class="totalValue" ng-class="{green: GetTotal() == 100, red: GetTotal() != 100}">{{GetTotal()}}</span></h4></div>
+                        </div>
+                    </section>
+                </md-content>
+            </div>
+            <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center">
+                <br />
+                <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                    <div layout="row" layout-align="center center">
+                        <h3 class="center">Pick how you want to rate your beers</h3>
+                    </div>
+                    <div layout="column" layout-align="center center">
+                        <div>If you cannot find the category you want, then you can add it.</div>
+                    </div>
+                    <div layout="column" layout-align="center center">
+                        <div>Note max value of all category has to sum 100</div>
+                    </div>
+
+
+                    <section layout="60" layout-sm="column" layout-xs="column" layout-align="center center" layout-wrap>
+                        <div flex="40" layout-align="center center">
+                            <md-input-container class="md-block" ng-if="!addingNewCategory">
+                                <label>Category</label>
+                                <md-select ng-model="review.type" md-selected-text="getSelectedTextForCategory()" ng-change="CategoryChange()">
+                                    <md-optgroup label="Breveries">
+                                        <md-option ng-value="type.id" ng-repeat="type in reviewTypes">{{type.name}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container class="md-block" ng-if="addingNewCategory">
+                                <input ng-model="review.newName" type="text" placeholder="Category Name">
+                                <div class="ng-messag"></div>
+                            </md-input-container>
+                        </div>
+                        <div flex="40" layout-align="center center">
+                            <md-input-container class="md-block">
+                                <input ng-model="review.maxValue" type="text" placeholder="Max rating value">
+                                <div class="ng-messag"></div>
+                            </md-input-container>
+                        </div>
+                        <div flex-offset-lg="10" flex-offset-md="10" flex="10" layout-align="center center">
+                            <md-button class="md-raised md-primary joinButton pull-right" ng-click="SelectCategory(review)">Add</md-button>
+                        </div>
+                    </section>
+                    <md-progress-linear md-mode="indeterminate" ng-if="loadingBeers"></md-progress-linear>
+                </md-content>
+            </div>
+        </div>
+    </div>
+
+
+
+@*<div class="noPadding">
+    <md-toolbar layout="row" class="md-hue-3">
+        <div class="md-toolbar-tools center">
+            <div>{{data.name}}</div>
+        </div>
+    </md-toolbar>
+    <div layout="row" layout-padding ng-cloak layout-align="center center" >
+        <br />
+        <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa">
+            <div layout="row" layout-align="center center">
+                <h1 class="center">Room Setup</h1>
+            </div>
+
+            <div layout="row" layout-align="center center">
+                <h4 class="center">Your room is almost ready. Now you only need to select your beers and how you want to rate them!</h4>
+            </div>
+
+            <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-button class="evenButton md-raised md-primary createButton" ng-click="type = 'pickingBeer'">Pick Your Beers</md-button>
+                <md-button class="evenButton md-raised md-primary bluebutton" ng-click="type = 'pickingCategories'">Pick Rating Categories</md-button>
+            </section>
+            <section layout="row" layout-sm="column" layout-xs="column" layout-align="center center" layout-wrap>
+                <md-button class="evenButton md-raised md-primary joinButton" ng-click="FinshCreation()">Finish</md-button>
+            </section>
+        </md-content>
+    </div>
+    <div ng-if="type == 'pickingBeer'">
+        <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="selectedBeers.length > 0">
+            <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                <section>
+                    <div layout="row" layout-wrap flex="100" ng-repeat="beer in selectedBeers" class="beerRow borderBottom" ng-class="{'last':$last}">
+                        <div flex=" 5"><h2>{{$index + 1}}</h2></div>
+                        <div flex="10"><img src="{{beer.lableSM}}" width="55" /></div>
+                        <div flex="30">
+                            <div class="beerName">{{beer.name}}</div>
+                            <div>{{beer.brewery.name}}</div>
+                            <div>{{beer.type}} </div>
+                        </div>
+                        <div flex="30">
+                            <div><b>ABV:</b> {{beer.percent}}%</div>
+                            <div><b>IBU:</b> <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span></div>
+                            <div><b>Utapped Rating:</b><span ng-if="beer.untappedRating != -1">{{beer.untappedRating}}</span><span ng-if="beer.untappedRating == -1">N/A</span></div>
+                        </div>
+                        <div flex="25">
+                            <md-button class="md-raised md-primary joinButton pull-right" ng-click="RemoveBeer(beer)">Remove</md-button>
+                        </div>
+                    </div>
+                </section>
+            </md-content>
+        </div>
+
+        <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center">
+            <br />
+            <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                <div layout="row" layout-align="center center">
+                    <h3 class="center">Find the beers you want and add them to your room</h3>
+                </div>
+                <div layout="row" layout-align="center center">
+                    <div>If you cannot find the beer you are looking for then please write the brewery and the beer name and we will probably find it for you.</div>
+                </div>
+
+                <section layout="60" layout-sm="column" layout-xs="column" layout-align="center center" layout-wrap>
+                    <div flex="40" layout-align="center center">
+                        <md-input-container class="md-block">
+                            <label>Brewery</label>
+                            <md-select ng-model="search.brevery" md-selected-text="getSelectedText()" ng-change="GetBreweryeBeers(search.brevery)">
+                                <md-optgroup label="Breveries">
+                                    <md-option ng-value="brewery.id" ng-repeat="brewery in breweries"><img src="{{brewery.lable}}" width="40" /> {{brewery.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div flex="40" layout-align="center center">
+                        <md-input-container class="md-block" ng-show="breweryNotListed">
+                            <input ng-model="search.breweryName" type="text" placeholder="Brewery name">
+                            <div class="ng-messag"></div>
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <input ng-model="search.beerName" type="text" placeholder="Beer name">
+                            <div class="ng-messag"></div>
+                        </md-input-container>
+                    </div>
+                    <div flex="10" layout-align="center center">
+                        <md-button class="md-raised md-primary joinButton pull-right" ng-click="SearchForBeers(search)">Search</md-button>
+                    </div>
+                </section>
+                <md-progress-linear md-mode="indeterminate" ng-if="loadingBeers"></md-progress-linear>
+            </md-content>
+        </div>
+        <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="beers.length > 0">
+            <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                <section>
+                    <div layout="row" layout-wrap flex="100" ng-repeat="beer in beers" class="beerRow borderBottom" ng-class="{'last':$last}">
+                        <div flex="10"><img src="{{beer.lableSM}}" width="55" /></div>
+                        <div flex="30">
+                            <div class="beerName">{{beer.name}}</div>
+                            <div>{{beer.brewery.name}}</div>
+                            <div>{{beer.type}} </div>
+                        </div>
+                        <div flex="30">
+                            <div><b>ABV:</b> {{beer.percent}}% </div>
+                            <div><b>IBU:</b> <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span></div>
+                            <div><b>Utapped Rating:</b><span ng-if="beer.IBU != -1">{{beer.untappedRating}}</span><span ng-if="beer.IBU == -1">N/A</span></div>
+                        </div>
+                        <div flex="30">
+                            <md-button class="md-raised md-primary joinButton pull-right" ng-click="SelectBeer(beer)">Add</md-button>
+                            <md-button class="md-raised md-primary joinButton pull-right" slide-toggle="#row_{{$index}}">Desc.</md-button>
+                        </div>
+                        <div flex="100" id="row_{{$index}}" class="slideable description" duration="0.3s">
+                            <div flex="100" flex-offset="10">
+                                <div><b>Description</b></div>
+                                <div>
+                                    {{beer.description}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </md-content>
+        </div>
+    </div>
+    <div ng-if="type == 'pickingCategories'">
+        <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center" ng-if="selectedCategories.length > 0">
+            <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                <section>
+                    <div layout="row" layout-wrap flex="100" ng-repeat="category in selectedCategories" class="borderBottom" >
+                        <div flex=" 5"><h4>{{$index + 1}}</h4></div>
+                        <div flex="45">
+                            <h4 class="categoryName">{{category.name}}</h4>
+                        </div>
+                        <div flex="25">
+                            <md-input-container class="md-block">
+                                <input ng-model="category.maxValue" type="text" placeholder="Max rating value">
+                                <div class="ng-messag"></div>
+                            </md-input-container>
+                        </div>
+                        <div flex="25">
+                            <md-button class="md-raised md-primary joinButton pull-right" ng-click="RemoveCategory(category)">Remove</md-button>
+                        </div>
+                    </div>
+                    <div layout="row" layout-wrap flex="100" class="beerRow borderBottom last">
+                        <div flex="100"><h4>Total Value: <span class="totalValue" ng-class="{green: GetTotal() == 100, red: GetTotal() != 100}">{{GetTotal()}}</span></h4></div>
+                    </div>
+                </section>
+            </md-content>
+        </div>
+        <div layout="row" layout-wrap layout-padding ng-cloak layout-align="center center">
+            <br />
+            <md-content flex="80" flex-sm="100" flex-xs="100" class="md-no-momentum" style="border-radius:4px; box-shadow: 0 0 5px #000 inset; padding:20px; background-color:#f5f7fa; margin-top:10px;">
+                <div layout="row" layout-align="center center">
+                    <h3 class="center">Pick how you want to rate your beers</h3>
+                </div>
+                <div layout="column" layout-align="center center">
+                    <div>If you cannot find the category you want, then you can add it.</div>
+                </div>
+                <div layout="column" layout-align="center center">
+                    <div>Note max value of all category has to sum 100</div>
+                </div>
+
+
+                <section layout="60" layout-sm="column" layout-xs="column" layout-align="center center" layout-wrap>
+                    <div flex="40" layout-align="center center">
+                        <md-input-container class="md-block" ng-if="!addingNewCategory">
+                            <label>Category</label>
+                            <md-select ng-model="review.type" md-selected-text="getSelectedTextForCategory()" ng-change="CategoryChange()">
+                                <md-optgroup label="Breveries">
+                                    <md-option ng-value="type.id" ng-repeat="type in reviewTypes">{{type.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container class="md-block" ng-if="addingNewCategory">
+                            <input ng-model="review.newName" type="text" placeholder="Category Name">
+                            <div class="ng-messag"></div>
+                        </md-input-container>
+                    </div>
+                    <div flex="40" layout-align="center center">
+                        <md-input-container class="md-block">
+                            <input ng-model="review.maxValue" type="text" placeholder="Max rating value">
+                            <div class="ng-messag"></div>
+                        </md-input-container>
+                    </div>
+                    <div flex-offset-lg="10" flex-offset-md="10" flex="10" layout-align="center center">
+                        <md-button class="md-raised md-primary joinButton pull-right" ng-click="SelectCategory(review)">Add</md-button>
+                    </div>
+                </section>
+                <md-progress-linear md-mode="indeterminate" ng-if="loadingBeers"></md-progress-linear>
+            </md-content>
+        </div>
+    </div>
+</div>*@

@@ -1,0 +1,60 @@
+﻿<div class="userScreen" style="overflow-x: hidden;">
+    <md-progress-linear md-mode="indeterminate" ng-if="initalLoad"></md-progress-linear>
+    <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                <a href="/"><img style="" src="~/Images/icons/home-2-24.png" /></a>
+            </md-button>
+            <span flex></span>
+            {{data.name}}
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                <a href="/"><img style="margin-left: 5px;" src="~/Images/icons/power-24.png" /></a>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <div class="row userBeerRow" ng-repeat="beer in data.beverages" ng-click="OpenBeer(beer)">
+        <div class="col-xs-12">
+            <div class="col-xs-3 center">
+                <md-progress-circular class="md-accent md-hue-1" md-diameter="74" style="position: absolute; left: 9px;top: -2px;" ng-if="beer.loading"></md-progress-circular>
+                <img ng-src="{{beer.imageUrlSm}}" class="avatar userAvatar" alt="beerImage" width="35" />
+                <div class="alcPercent user">
+                    {{beer.alcoholPercentage}}% - IBU <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span>
+                </div>
+            </div>
+            <div class="col-xs-9">
+                <h3>{{ beer.name }}</h3>
+                <h4>{{ beer.manufacturer }}</h4>
+                <p>{{ beer.typeName }}</p>
+                <p>Your Review Score: {{GetTotal(beer)}}</p>
+            </div>
+        </div>
+        <div class="col-xs-12 noPadding reviewContainer animate-slide" ng-show="beer.isOpen">
+            <div class="col-xs-12 reviewRow" ng-repeat="reviewType in beer.reviewTypes">
+                <div class="col-xs-8 text">
+                    {{reviewType.name}}
+                </div>
+                <div class="col-xs-4">
+                    <md-select placeholder="{{reviewType.name}}" ng-model="reviewType.userValue">
+                        <md-option ng-value="number" ng-repeat="number in GetSelectArr(reviewType.maxValue)">{{number}}</md-option>
+                    </md-select>
+                </div>
+            </div>
+            <div class="col-xs-offset-1 col-xs-10 col-lg-10 cener">
+                <md-input-container class="md-block">
+                    <input ng-model="beer.comment" type="text" placeholder="Comment" >
+                </md-input-container>
+            </div>
+            <div class="col-xs-12">
+                <div class="col-xs-12 noPadding right">
+                    <a ng-click="SubmitReview(beer)">
+                        <md-button class="md-raised voteButton" ng-if="!beer.reviewd">Submit Review</md-button>
+                        <md-button class="md-raised updateVoteButton" ng-if="beer.reviewd">Update Review</md-button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

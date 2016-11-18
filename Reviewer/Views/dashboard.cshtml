@@ -1,0 +1,116 @@
+﻿<div class="row dashboard">
+    <div class="col-lg-12 center" style="background-color: #1B2024; color:white; padding:10px;">
+        <b>Hið Næstum Árlega Jólabjórssmakk</b>
+    </div>
+    <div class="col-lg-4 beerRow" style="padding-right:0">
+        <div class="col-lg-12 center" style="background-color: #1B2024; color:white; padding:10px;">
+            <b>Bjórar kvöldsins</b>
+        </div>
+        <div class="col-lg-12 beerRecord" ng-repeat="b in data.beers track by $index">
+            <div class="col-lg-1 col-lg-1 number" style="">{{b.Id}}</div>
+            <div class="col-lg-8 col-lg-8">
+                <div class="beerName">{{b.BeerName}}</div>
+                <div class="side">-{{b.Side}}</div>
+            </div>
+            <div class="col-lg-2 center percent">
+                {{b.alc}}%
+            </div>
+            <div class="col-lg-1 col-lg-1 center openArrow {{b.Id}}" ng-click="ExpandBeer(b.Id)" style="margin-top:7px; cursor:pointer;">
+                <img ng-hide="open == b.beer.Id || b.hasReviewed" style="margin-top:10px;" src="https://cdn3.iconfinder.com/data/icons/faticons/32/arrow-down-01-128.png" width="20" />
+                <img ng-show="open == b.beer.Id && !b.hasReviewed" style="margin-top:10px;" src="https://cdn3.iconfinder.com/data/icons/faticons/32/arrow-up-01-128.png" width="20" />
+                <img ng-show="b.hasReviewed" style="margin-top:10px;" src="https://cdn3.iconfinder.com/data/icons/faticons/32/done-01-128.png" width="20" />
+            </div>
+            <div class="col-xs-12 col-sm-12 breath reviewContainer {{b.Id}}">
+                <div class="col-lg-6">
+                    <img src="{{b.imageUrl}}" width="100" />
+                </div>
+                <div class="col-lg-6 center">
+                    {{b.extraInfo}}
+                    <div class="breath center" ng-if="openBeer == b.Id" style="font-weight:800">
+                        Opið fyrir kosningu
+                    </div>
+                    <div class="breath center" ng-if="openBeer != b.Id">
+                        <img src="https://d13yacurqjgara.cloudfront.net/users/278870/screenshots/1573076/preloader_gif.gif" width="200"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4" style="padding-left:0; padding-right:0;">
+        <div class="col-lg-12 center" style="background-color: #1B2024; color:white; padding:10px;">
+            <b>Kosning</b>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Notandi</th>
+                    <th>Ar</th>
+                    <th>Ap</th>
+                    <th>Fl</th>
+                    <th>Mf</th>
+                    <th>OAI</th>
+                    <th>CB</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="v in votes track by $index" class="userRow {{v.name}}">
+                    <th>{{$index + 1}}</th>
+                    <th>{{v.name}}</th>
+                    <th>{{v.ar}}</th>
+                    <th>{{v.ap}}</th>
+                    <th>{{v.fl}}</th>
+                    <th>{{v.mf}}</th>
+                    <th>{{v.oa}}</th>
+                    <th>{{v.cb}}</th>
+                    <th>{{v.total}}</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-4" style="padding-left:0; padding-right:0;">
+        <div class="col-lg-12 center" style="background-color: #1B2024; color:white; padding:10px;">
+            <b>Leaderboard</b>
+        </div>
+        @*<table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bjór</th>
+                    <th>Ar</th>
+                    <th>Ap</th>
+                    <th>Fl</th>
+                    <th>Mf</th>
+                    <th>OAI</th>
+                    <th>CB</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in data.revs track by $index | orderBy : '-total'" ng-class="{red: openBeer == r.id}">
+                    <th>{{$index + 1}}</th>
+                    <th>{{r.name}}</th>
+                    <th>{{r.ar}}</th>
+                    <th>{{r.ap}}</th>
+                    <th>{{r.fl}}</th>
+                    <th>{{r.mf}}</th>
+                    <th>{{r.oa}}</th>
+                    <th>{{r.cb}}</th>
+                    <th>{{r.total}}</th>
+                </tr>
+            </tbody>
+        </table>*@
+
+        <div class="col-lg-12 beerRecord" ng-repeat="r in data.revs | orderBy : '-total'" ng-class="{red: openBeer == r.id}" style="border-left:1px solid #f5f5f5">
+            <div class="col-lg-1 col-lg-1 number" style="">{{$index + 1}}</div>
+            <div class="col-lg-9 col-lg-9">
+                <div class="beerName" style="font-size:16px;">{{r.name}}</div>
+                <div class="side">-AR: {{r.ar}} - AP: {{r.ap}} - FL: {{r.fl}} - MF: {{r.mf}} - OA: {{r.oa}} - CB: {{r.cb}}</div>
+            </div>
+            <div class="col-lg-2 center percent">
+                {{r.total}}
+            </div>
+        </div>
+    </div>
+</div>

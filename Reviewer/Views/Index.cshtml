@@ -1,0 +1,23 @@
+﻿@{
+    PageData["title"] = "AngularJS SPA Template for Visual Studio";
+}
+
+<div class="indexPage">
+    <div class="mainLogo">
+        <img src="~/Images/logo.png" />
+    </div>
+
+
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <a ui-sref="createRoom"><md-button class="md-raised frontButton createButton">Create Room</md-button></a>
+        <a ui-sref="joinroom"><md-button class="md-raised md-primary frontButton joinButton">Join Room</md-button></a>
+        <a ui-sref="opendashboard"><md-button class="md-raised md-primary frontButton dashboardButton">Open Dashboard</md-button></a>
+        <a ng-click="Continue()" ng-if="continue">
+            <md-button class="md-raised md-primary frontButton continueButtom">
+                <div>Continue</div>
+                <div>{{username}}</div>
+                <div>Room: {{code}}</div>   
+            </md-button>
+        </a>
+    </section>
+</div>

@@ -1,0 +1,125 @@
+﻿<div class="userScreen tv">
+    <md-progress-linear md-mode="indeterminate" ng-if="initalLoad"></md-progress-linear>
+    <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                <a href="/"><img src="~/Images/icons/home-2-24.png" /></a>
+            </md-button>
+            <span flex></span>
+            {{data.name}}
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="More" ng-click="LogOut()">
+                <img src="~/Images/icons/power-24.png" />
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div class="indexPage" ng-if="initalLoad">
+        <div class="mainLogo">
+            <img src="~/Images/logo.png" />
+        </div>
+    </div>
+    <div ng-if="!initalLoad" class="col-lg-4 dashboardContainer dashboard scrollY">
+        <div class="row userBeerRow" ng-repeat="beer in data.beverages | beerFilter:items" ng-click="OpenBeer(beer)">
+            <div class="col-lg-12 beerinfo">
+                <div class="col-lg-3 center" style="position:relative;">
+                    <md-progress-circular class="md-accent md-hue-1" md-diameter="74" style="position: absolute; left: 2px; top: -4px;" ng-if="beer.loading"></md-progress-circular>
+                    <img ng-src="{{beer.imageUrlSm}}" class="avatar" alt="beerImage" width="35" style="position: absolute; left: 9px;top: -2px;" />
+                    <div class="alcPercent" style="position: absolute; left: 6px; top: 69px;">
+                        {{beer.alcoholPercentage}}% - IBU <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <h3>{{ beer.name }}</h3>
+                    <h4>{{ beer.manufacturer }}</h4>
+                    <p>{{ beer.typeName }}</p>
+                </div>
+            </div>
+            <div class="col-lg-12 noPadding reviewContainer animate-slide" ng-show="beer.isOpen">
+                <div class="col-lg-5 ">
+                    <img ng-src="{{beer.imageUrlMed}}" ng-if="beer.imageUrlMed.length > 0" alt="beerImage" width="150" />
+                    <img ng-src="{{beer.imageUrlSm}}" ng-if="beer.imageUrlMed.length == 0" alt="beerImage" width="150" />
+                    <a ng-click="FinsihReview(beer)"><md-button style="margin-left: 1px;" class="md-raised voteButton">Review Finished</md-button></a>
+
+                </div>
+                <div class="col-lg-7 ">
+                    {{beer.desc}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="!initalLoad && !showingResults" class="col-lg-5 dashboardContainer dashboard scrollY">
+        <div ng-if="noBeerSelected" class="row reviewsRow" ng-repeat="username in data.usernames track by $index">
+            <div class="col-lg-12">
+                <div class="col-lg-12">{{$index + 1}}. {{username}}</div>
+            </div>
+        </div>
+        <table ng-if="!noBeerSelected" class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th class="right" ng-repeat="category in data.reviewTypes">{{category.abbr}}</th>
+                    <th class="right">Total</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="rev in currentReviews | userFilter:items" class="reviewsRow {{rev.userId}}">
+                <tr class="blink">
+                    <td>{{$index + 1}}</td>
+                    <td>{{rev.username}}</td>
+                    <td class="right" ng-if="rev.parts.length > 0" ng-repeat="part in rev.parts | reviewPartSorter:items">{{part.score}}</td>
+                    <td class="right"><b>{{rev.totalScore}}</b></td>
+                </tr>
+                <tr class="smaller">
+                    <td class="right"></td>
+                    <td>Average</td>
+                    <td class="right" ng-if="rev.ave.aveParts.length > 0" ng-repeat="part in rev.ave.aveParts | reviewPartSorter:items">{{part.score  | number: 1}}</td>
+                    <td class="right">{{rev.ave.aveScore | number: 1}}</td>
+                </tr>
+                <tr ng-if="rev.comment != null && rev.comment.length > 0" class="smaller">
+                    <td class="comment"></td>
+                    <td colspan="42" class="comment">- {{rev.comment}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="!initalLoad && showingResults" class="col-lg-5 dashboardContainer dashboard current scrollY">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="name">{{selectedBeer.name}}</div>
+                <div class="manufacturer">{{selectedBeer.manufacturer}}</div>
+                <div class="ratingHeader">Current Ranking: <span class="currentRanking">{{currentRank}}</span></div>
+
+                <div class="img"><img src="{{selectedBeer.imageUrlMed}}" width="350" /></div>
+
+                <div class="ratingHeader success">Highest Rating</div>
+                <div class="ratingResult success">{{highest.username}}: <span class="">{{highest.totalScore}}</span></div>
+                <div class="ratingHeader error">Lowest Rating</div>
+                <div class="ratingResult error">{{lowest.username}}: <span class="">{{lowest.totalScore}}</span></div>
+                <div class="final header">Final Score</div>
+                <div class="final heart">{{totalScore | number: 2}}</div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!initalLoad" class="col-lg-3 dashboardContainer dashboard ranking scrollY"> 
+        <div class="row userBeerRow" ng-repeat="beer in data.beverages | resultFilter:items">
+            <div class="col-lg-12 beerinfo">
+                <div class="col-lg-3 center" style="position:relative;">
+                    <div class="beerRank">{{$index + 1}}</div>
+                    <img ng-src="{{beer.imageUrlSm}}" class="avatar" alt="beerImage" width="35" style="" />
+                </div>
+                <div class="col-lg-7">
+                    <h3>{{ beer.name }}</h3>
+                    <div class="row">
+                        <div class="col-lg-6" ng-repeat="part in beer.results.partResults">
+                            <b>{{part.abbr}}:</b> <span>{{part.score | number : 1}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 noPadding finalScore pull-right">
+                    {{beer.results.totalScore | number : 1}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
