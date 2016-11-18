@@ -126,7 +126,8 @@ angular.module('app.controllers', [])
                 categoryToAdd = {
                     name: category.newName,
                     isNew: true,
-                    maxValue: category.maxValue
+                    maxValue: category.maxValue,
+                    abbr: category.abbr
                 };
             }
 

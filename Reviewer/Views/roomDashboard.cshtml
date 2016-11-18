@@ -120,7 +120,7 @@
                                     <div>Note max value of all category has to sum 100.</div>
                                 </div>
                                 <div class="col-lg-offset-1 col-lg-4">
-                                    <md-input-container class="md-block">
+                                    <md-input-container class="md-block" ng-if="!addingNewCategory">
                                         <label>Category</label>
                                         <md-select ng-model="review.type" md-selected-text="getSelectedTextForCategory()" ng-change="CategoryChange()">
                                             <md-optgroup label="Breveries">
@@ -128,6 +128,22 @@
                                             </md-optgroup>
                                         </md-select>
                                     </md-input-container>
+                                    <md-input-container class="md-block" ng-if="addingNewCategory">
+                                        <input ng-model="review.newName" type="text" placeholder="Category Name">
+                                        <div class="ng-messag"></div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" ng-if="addingNewCategory">
+                                        <input ng-model="review.abbr" type="text" placeholder="Category Abbreviation">
+                                        <div class="ng-messag"></div>
+                                    </md-input-container>
+                                    @*<md-input-container class="md-block">
+                                        <label>Category</label>
+                                        <md-select ng-model="review.type" md-selected-text="getSelectedTextForCategory()" ng-change="CategoryChange()">
+                                            <md-optgroup label="Breveries">
+                                                <md-option ng-value="type.id" ng-repeat="type in reviewTypes">{{type.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>*@
                                 </div>
                                 <div class="col-lg-4">
                                     <md-input-container class="md-block">
