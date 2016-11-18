@@ -21,23 +21,23 @@ namespace App.Reviewer.Routing
             //     ~/views/about -> ~/views/about.cshtml
             //     ~/xxx         -> ~/views/404.cshtml
             var filePath = requestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath;
+            filePath = "~/views/index.cshtml";
+            //if (filePath == "~/")
+            //{
+            //    filePath = "~/views/index.cshtml";
+            //}
+            //else
+            //{
+            //    if (!filePath.StartsWith("~/views/", StringComparison.OrdinalIgnoreCase))
+            //    {
+            //        filePath = filePath.Insert(2, "views/");
+            //    }
 
-            if (filePath == "~/")
-            {
-                filePath = "~/views/index.cshtml";
-            }
-            else
-            {
-                if (!filePath.StartsWith("~/views/", StringComparison.OrdinalIgnoreCase))
-                {
-                    filePath = filePath.Insert(2, "views/");
-                }
-
-                if (!filePath.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase))
-                {
-                    filePath = filePath += ".cshtml";
-                }
-            }
+            //    if (!filePath.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase))
+            //    {
+            //        filePath = filePath += ".cshtml";
+            //    }
+            //}
 
             var handler = WebPageHttpHandler.CreateFromVirtualPath(filePath); // returns NULL if .cshtml file wasn't found
 

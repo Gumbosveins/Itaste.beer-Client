@@ -6,7 +6,7 @@
                 <a href="/"><img src="~/Images/icons/home-2-24.png" /></a>
             </md-button>
             <span flex></span>
-            {{data.name}}
+            <span ng-if="data.code">Room Code: {{data.code}}</span>
             <span flex></span>
             <md-button class="md-icon-button" aria-label="More" ng-click="LogOut()">
                 <img src="~/Images/icons/power-24.png" />
@@ -32,6 +32,10 @@
                     <h3>{{ beer.name }}</h3>
                     <h4>{{ beer.manufacturer }}</h4>
                     <p>{{ beer.typeName }}</p>
+                </div>
+                <div class="col-lg-2 center voted" ng-if="currentBeerId == beer.beverageId">
+                    <b>Voted</b>
+                    <div>{{voted}}/{{currentReviews.length}}</div>
                 </div>
             </div>
             <div class="col-lg-12 noPadding reviewContainer animate-slide" ng-show="beer.isOpen">

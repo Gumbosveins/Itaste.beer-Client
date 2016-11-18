@@ -307,7 +307,7 @@ angular.module('app.controllers', [])
         ToastService.InitToast();
         $scope.initalLoad = true;
         TasteService.GetDashboard($stateParams.roomCode, $stateParams.pin).then(function (data) {
-
+            console.log(data);
             $scope.noBeerSelected = true;
             $scope.data = data;
             $scope.initalLoad = false;
@@ -352,7 +352,9 @@ angular.module('app.controllers', [])
                 userId: data.userId,
                 totalScore: 0,
                 comment: "",
-                parts: _.sortBy(parts, function (i) { return i.displayOrder; })
+                parts: _.sortBy(parts, function (i) { return i.displayOrder; }),
+                ave: $scope.GetAveForUser(data.userId),
+                includeInCalculations: false
             };
             $scope.data.beverages.forEach(function (b) {
                 b.reviews.push(rev)
@@ -361,8 +363,17 @@ angular.module('app.controllers', [])
             if ($scope.currentReviews.length > 0) {
                 $scope.currentReviews.push(rev);
             }
-
         });
+        
+        $scope.currentBeerId = "";
+        $scope.GetNumberOfVotes = function (reviews) {
+            $scope.$apply;
+            var count = _.where(reviews, { includeInCalculations: true });
+            $scope.voted = count.length;
+            //if ($scope.voted == reviews.length) {
+            //    $scope.FinsihReview($scope.currentBeer);
+            //}
+        }
 
         $scope.clientPushHubProxy.on("NewReview", function (data) {
             console.log("data", data);
@@ -396,6 +407,7 @@ angular.module('app.controllers', [])
                     }
                 });
             }
+            user.includeInCalculations = true;
             beerReview.includeInCalculations = true;
             beerReview.totalScore = data.totalScore;
             beerReview.comment = data.comment;
@@ -403,6 +415,7 @@ angular.module('app.controllers', [])
 
             user.ave = $scope.GetAveForUser(user.userId);
             $scope.currentReviews = _.sortBy($scope.currentReviews, function (r) { return -r.totalScore; });
+            $scope.GetNumberOfVotes($scope.currentReviews);
             var textColor = "#fff";
             var red = "#ff6666";
             var pink = "#ffc0cb";
@@ -442,10 +455,11 @@ angular.module('app.controllers', [])
         });
 
         $scope.currentReviews = [];
-        $scope.lastBeer;
+        $scope.currentBeer;
         $scope.lastDisplayOrder;
 
         $scope.OpenBeer = function (beer) {
+            $scope.currentBeerId = "";
             $scope.showingResults = false;
 
             $scope.noBeerSelected = false;
@@ -461,13 +475,15 @@ angular.module('app.controllers', [])
                 beer.isOpen = true;
                 beer.loading = false;
                 beer.reviews.forEach(function (r) {
+                    console.log(r);
                     var rev = {
                         username: r.username,
                         userId: r.userId,
                         totalScore: r.totalScore,
                         comment: r.comment,
                         parts: [],
-                        ave: $scope.GetAveForUser(r.userId)
+                        ave: $scope.GetAveForUser(r.userId),
+                        includeInCalculations: r.includeInCalculations
                     };
                     if (r.parts != null) {
                         r.parts.forEach(function (p) {
@@ -483,9 +499,10 @@ angular.module('app.controllers', [])
                     $scope.currentReviews.push(rev);
 
                     $scope.currentReviews = _.sortBy($scope.currentReviews, function (r) { return -r.totalScore; });
-
-                    $scope.lastBeer = beer;
+                    $scope.currentBeer = beer;
                 });
+                $scope.GetNumberOfVotes($scope.currentReviews);
+                $scope.currentBeerId = beer.beverageId;
             }, function () {
                 beer.loading = false;
             });
@@ -499,8 +516,25 @@ angular.module('app.controllers', [])
                 userId: userId
             });
 
-            if (usersReviews.length == 0)
-                return null;
+            if (usersReviews.length == 0) {
+                var partAve = [];
+                $scope.data.reviewTypes.forEach(function (type) {
+                    var newPart = {
+                        reviewTypeId: type.reviewId,
+                        displayOrder: type.displayOrder,
+                        score: 0,
+                        abbr: type.abbr,
+                    }
+                    partAve.push(newPart);
+                });
+
+
+                var obj = {
+                    aveScore: 0,
+                    aveParts: partAve
+                };
+                return obj;
+            }
 
             var parts = _.pluck(usersReviews, "parts");
             parts = [].concat.apply([], parts);
