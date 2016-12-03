@@ -173,28 +173,31 @@ angular.module('app.controllers', [])
         }
 
 
-
-        $scope.SearchForBeers = function (q) {
-            var query = "";
+        $scope.showUntappedButton = false;
+        $scope.SearchForBeers = function (q, force) {
+            var query = q.beerName;
             
-            if (q.brevery != undefined && q.brevery != 0) {
-                query += _.where($scope.breweries, { id: $scope.search.brevery })[0].name;
-            }
-            else if (q.breweryName != undefined && q.breweryName.length != 0) {
-                query += q.breweryName;
-            }
-            if (q.beerName != undefined && q.beerName.length != 0) {
-                if (query.length != 0)
-                    query += " " + q.beerName;
-                else
-                    query = q.beerName;
-            }
+            //if (q.brevery != undefined && q.brevery != 0) {
+            //    query += _.where($scope.breweries, { id: $scope.search.brevery })[0].name;
+            //}
+            //else if (q.breweryName != undefined && q.breweryName.length != 0) {
+            //    query += q.breweryName;
+            //}
+            //if (q.beerName != undefined && q.beerName.length != 0) {
+            //    if (query.length != 0)
+            //        query += " " + q.beerName;
+            //    else
+            //        query = q.beerName;
+            //}
 
             if (query.length == 0) {
                 ToastService.Toast("Your search query is empty!");
             }
             $scope.loadingBeers = true;
-            TasteService.SearchForBeers(query).then(function (data) {
+            TasteService.SearchForBeers(query, force).then(function (data) {
+                if (!force) {
+                    $scope.showUntappedButton = false;
+                }
                 $scope.loadingBeers = false;
                 $scope.beers = data;
             });
@@ -308,11 +311,20 @@ angular.module('app.controllers', [])
         ToastService.InitToast();
         $scope.initalLoad = true;
         TasteService.GetDashboard($stateParams.roomCode, $stateParams.pin).then(function (data) {
+            if (data.status != 0) {
+                ToastService.Toast(data.message, false);
+                $state.go("opendashboard");
+                return;
+            }
             console.log(data);
             $scope.noBeerSelected = true;
             $scope.data = data;
             $scope.initalLoad = false;
             $scope.GetAveForUser();
+
+            $scope.data.beverages.forEach(function (b) {
+                b.weightedAve = $scope.CalculateBeerAverage(b.reviews);
+            })
 
             var order = 0;
 
@@ -476,7 +488,6 @@ angular.module('app.controllers', [])
                 beer.isOpen = true;
                 beer.loading = false;
                 beer.reviews.forEach(function (r) {
-                    console.log(r);
                     var rev = {
                         username: r.username,
                         userId: r.userId,
@@ -502,11 +513,93 @@ angular.module('app.controllers', [])
                     $scope.currentReviews = _.sortBy($scope.currentReviews, function (r) { return -r.totalScore; });
                     $scope.currentBeer = beer;
                 });
+
+
                 $scope.GetNumberOfVotes($scope.currentReviews);
                 $scope.currentBeerId = beer.beverageId;
+                console.log($scope.currentReviews);
+                $scope.CalculateBeerAverage();
             }, function () {
                 beer.loading = false;
             });
+        }
+
+        $scope.GetAverageClass = function (part, rev) {
+            var currentAvePart = _.where(rev.ave.aveParts, { reviewTypeId: part.reviewTypeId })[0];
+            if (part.score > currentAvePart.score)
+                return "higher";
+            else if (part.score < currentAvePart.score)
+                return "lower"
+            return "";
+        }
+
+        $scope.IsLowestAverage = function (part) {
+            var aves = _.pluck($scope.currentReviews, "ave");
+            var aveparts = _.pluck(aves, "aveParts");
+            var arr = [].concat.apply([], aveparts);
+            var currentPartArr = _.where(arr, { reviewTypeId: part.reviewTypeId });
+            var min = _.min(_.pluck(currentPartArr, "score"));
+
+            return min == part.score
+        }
+
+        $scope.IsHighestAverage = function (part) {
+            var aves = _.pluck($scope.currentReviews, "ave");
+            var aveparts = _.pluck(aves, "aveParts");
+            var arr = [].concat.apply([], aveparts);
+            var currentPartArr = _.where(arr, { reviewTypeId: part.reviewTypeId });
+            var max = _.max(_.pluck(currentPartArr, "score"));
+
+            return max == part.score
+        }
+
+        $scope.IsLowestTotalAverage = function (score) {
+            var aves = _.pluck($scope.currentReviews, "ave");
+            var aveScores = _.pluck(aves, "aveScore");
+            var min = _.min(aveScores);
+            return min == score
+        }
+
+        $scope.IsHighestTotalAverage = function (score) {
+            var aves = _.pluck($scope.currentReviews, "ave");
+            var aveScores = _.pluck(aves, "aveScore");
+            var max = _.max(aveScores);
+            return max == score
+        }
+
+        $scope.CalculateBeerAverage = function (reviews) {
+                
+            var numberOfReviews = _.where(reviews, { includeInCalculations: true }).length;
+            if (numberOfReviews == 0)
+                return 0;
+
+            var sorted = _.sortBy(reviews, function (r) { return -r.totalScore });
+            var removedTopAndBottom = [];
+            for (var i = 2; i < sorted.length -2; i++) {
+                removedTopAndBottom.push(sorted[i]);
+            }
+
+            var reviewsWithoutTopAndBott = [];
+            var amean = _.reduce(removedTopAndBottom, function (memo, num) { return memo + num.totalScore; }, 0) / (numberOfReviews - 4);
+
+            var distance = [];
+            var total = [];
+            var weight = [];
+            
+            for (var i = 0; i < reviews.length; i++) {
+                if (!reviews[i].includeInCalculations)
+                    continue;
+
+                total.push(reviews[i].totalScore);
+                var dist = Math.abs(amean - reviews[i].totalScore);
+                distance.push(dist);
+                weight.push(Math.pow(100 - dist, 3))
+
+            }
+
+            var dot = math.dot(total, weight);
+            var finalScore = dot / _.reduce(weight, function (memo, num) { return memo + num; }, 0);
+            return finalScore;
         }
 
         $scope.GetAveForUser = function (userId) {
@@ -577,6 +670,7 @@ angular.module('app.controllers', [])
         var cheer = new Audio('sounds/Cheering 3-SoundBible.com-1680253418.mp3');
         var applause = new Audio('sounds/Audience_Applause-Matthiew11-1206899159.mp3');
         var haleluja = new Audio('sounds/Hallelujah Chorus Sound Effect.mp3');
+        var yeah = new Audio('sounds/Oh Yeah (Sound Effect).mp3');
         var uefa = new Audio('sounds/UEFA Champions League - Theme Song (Short Version).mp3');
         $scope.FinsihReview = function (beer) {
             beer.loading = true;
@@ -601,6 +695,7 @@ angular.module('app.controllers', [])
                 $timeout(function () {
                     var b = _.where($scope.data.beverages, { beverageId: $scope.currentBeerId })[0];
                     b.results = $scope.currentData;
+                    b.weightedAve = $scope.CalculateBeerAverage(b.reviews);
                 }, 7100);
 
                 $timeout(function () {
@@ -655,10 +750,10 @@ angular.module('app.controllers', [])
                         })
                     }, 1000);
                 }, 1000);
-
-                
             });
         }
+
+
 
     }])
     .controller('joinCtrl', ['$scope', '$stateParams', '$location', '$window', '$state', 'TasteService', 'ToastService', function ($scope, $stateParams, $location, $window, $state, TasteService, ToastService) {

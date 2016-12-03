@@ -117,10 +117,10 @@ angular.module('app.services', [])
             })
             return deferred.promise;
         },
-        SearchForBeers: function (query) {
+        SearchForBeers: function (query, force) {
             var deferred = $q.defer();
             $http({
-                url: serviceUrl + 'api/Taster/SearchForBeers?query=' + query,
+                url: serviceUrl + 'api/Taster/SearchForBeers?query=' + query + '&force=' + force,
                 method: 'GET',
             }).success(function (data) {
                 deferred.resolve(data);

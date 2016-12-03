@@ -511,13 +511,34 @@ md-toolbar{
     margin-top:5px;
 }
 
-.totalValue.red {
+.partScore{
+    font-weight:700;
+}
+
+.dangerColor, .totalValue.red, .partScore.lower, .totalScore.lower {
     color:@btn-danger-bg;
 }
 
-.totalValue.green {
+.successColor, .totalValue.gree, .partScore.higher, .totalScore.higher{
     color:@btn-success-bg;
 }
+
+
+.warningColor{
+    color:orange;
+    font-weight:700;
+}
+
+.highestColor{
+    font-weight:700;
+    color:darkseagreen;
+}
+
+.avePart.dangerColor, .avePart.successColor{
+    font-weight:700;
+}
+
+
 
 .dashboardInfo{
     font-style:italic;

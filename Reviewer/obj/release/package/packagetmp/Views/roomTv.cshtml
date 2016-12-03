@@ -71,14 +71,14 @@
                 <tr class="blink">
                     <td>{{$index + 1}}</td>
                     <td>{{rev.username}}</td>
-                    <td class="right" ng-if="rev.parts.length > 0" ng-repeat="part in rev.parts | reviewPartSorter:items">{{part.score}}</td>
-                    <td class="right"><b>{{rev.totalScore}}</b></td>
+                    <td class="right partScore {{GetAverageClass(part, rev)}}"  ng-if="rev.parts.length > 0" ng-repeat="part in rev.parts | reviewPartSorter:items">{{part.score}}</td>
+                    <td class="right totalScore" ng-class="{higher: rev.totalScore >= rev.ave.aveScore, lower: rev.totalScore < rev.ave.aveScore}"><b>{{rev.totalScore}}</b></td>
                 </tr>
                 <tr class="smaller">
                     <td class="right"></td>
                     <td>Average</td>
-                    <td class="right" ng-if="rev.ave.aveParts.length > 0" ng-repeat="part in rev.ave.aveParts | reviewPartSorter:items">{{part.score  | number: 1}}</td>
-                    <td class="right">{{rev.ave.aveScore | number: 1}}</td>
+                    <td class="right avePart" ng-class="{warningColor: IsLowestAverage(part), highestColor: IsHighestAverage(part)}" ng-if="rev.ave.aveParts.length > 0" ng-repeat="part in rev.ave.aveParts | reviewPartSorter:items">{{part.score  | number: 1}}</td>
+                    <td class="right avePart" ng-class="{warningColor: IsLowestTotalAverage(rev.ave.aveScore ), highestColor: IsHighestTotalAverage(rev.ave.aveScore )}">{{rev.ave.aveScore | number: 1}}</td>
                 </tr>
                 <tr ng-if="rev.comment != null && rev.comment.length > 0" class="smaller">
                     <td class="comment"></td>
@@ -121,7 +121,9 @@
                     </div>
                 </div>
                 <div class="col-lg-2 noPadding finalScore pull-right">
-                    {{beer.results.totalScore | number : 1}}
+                    <div>{{beer.results.totalScore | number : 1}}</div>
+                    <img style="float: left; width: 17px;" src="~/Images/icons/Xave.PNG" />
+                    <div style="font-size:12px;">{{beer.weightedAve | number : 1}}</div>
                 </div>
             </div>
         </div>

@@ -48,27 +48,28 @@
                                     <div class="center">If you cannot find the beer you are looking for then please write the brewery and the beer name and we will probably find it for you.</div>
                                 </div>
                                 <div class="col-lg-offset-1 col-lg-4">
-                                    <md-input-container class="md-block">
+                                    @*<md-input-container class="md-block">
                                         <label>Brewery</label>
                                         <md-select ng-model="search.brevery" md-selected-text="getSelectedText()" ng-change="GetBreweryeBeers(search.brevery)">
                                             <md-optgroup label="Breveries">
                                                 <md-option ng-value="brewery.id" ng-repeat="brewery in breweries"><img src="{{brewery.lable}}" width="40" /> {{brewery.name}}</md-option>
                                             </md-optgroup>
                                         </md-select>
-                                    </md-input-container>
+                                    </md-input-container>*@
                                 </div>
-                                <div class="col-lg-4">
-                                    <md-input-container class="md-block" ng-show="breweryNotListed">
+                                <div class="col-lg-8">
+                                    @*<md-input-container class="md-block" ng-show="breweryNotListed">
                                         <input ng-model="search.breweryName" type="text" placeholder="Brewery name">
                                         <div class="ng-messag"></div>
-                                    </md-input-container>
+                                    </md-input-container>*@
                                     <md-input-container class="md-block">
                                         <input ng-model="search.beerName" type="text" placeholder="Beer name">
                                         <div class="ng-messag"></div>
                                     </md-input-container>
                                 </div>
-                                <div class="col-lg-1 searchButton" style="margin-top: 7px;">
-                                    <md-button class="md-raised md-primary joinButton" ng-click="SearchForBeers(search)">Search</md-button>
+                                <div class="col-lg-3 searchButton" style="margin-top: 7px;">
+                                    <md-button class="md-raised md-primary joinButton" ng-click="SearchForBeers(search, false)">Search</md-button>
+                                    <md-button class="md-raised md-primary joinButton" ng-click="SearchForBeers(search, true)">Search Untapped</md-button>
                                 </div>
                                 <div class="col-lg-1 center">
                                     <md-progress-circular class="md-hue-2" md-diameter="20px" style="margin-left: 25px; margin-top: 20px;" ng-if="loadingBeers"></md-progress-circular>

@@ -18,9 +18,12 @@ angular.module('app.filters', [])
     })
     .filter('userFilter', function () {
         return function (items) {
-            var filtered = _.sortBy(items, function (i) { return -i.totalScore; });
+            
 
-            return filtered;
+            if(_.some(items, function (i) {return i.includeInCalculations;}))
+                return _.sortBy(items, function (i) { return -i.totalScore; });
+            else
+                return _.sortBy(items, function (i) { return -i.ave.aveScore; });
         };
     })
     .filter('reviewPartSorter', function () {

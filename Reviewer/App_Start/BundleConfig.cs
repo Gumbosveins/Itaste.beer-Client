@@ -35,6 +35,7 @@ namespace App.Reviewer
                 "~/scripts/jquery.signalR-2.2.0.min.js",
                 "~/scripts/toastr.min.js",
                 "~/scripts/vendor/underscore-min.js",
+                "~/scripts/vendor/math.min.js",
                 "~/scripts/filters.js",
                 "~/scripts/services.js",
                 "~/scripts/directives.js",

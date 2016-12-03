@@ -6336,11 +6336,32 @@ md-toolbar {
 .beerRow .description {
   margin-top: 5px;
 }
-.totalValue.red {
+.partScore {
+  font-weight: 700;
+}
+.dangerColor,
+.totalValue.red,
+.partScore.lower,
+.totalScore.lower {
   color: #d9534f;
 }
-.totalValue.green {
+.successColor,
+.totalValue.gree,
+.partScore.higher,
+.totalScore.higher {
   color: #5cb85c;
+}
+.warningColor {
+  color: orange;
+  font-weight: 700;
+}
+.highestColor {
+  font-weight: 700;
+  color: darkseagreen;
+}
+.avePart.dangerColor,
+.avePart.successColor {
+  font-weight: 700;
 }
 .dashboardInfo {
   font-style: italic;

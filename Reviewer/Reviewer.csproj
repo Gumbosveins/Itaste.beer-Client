@@ -154,7 +154,9 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="Content\variables.less" />
     <Content Include="Global.asax" />
+    <Content Include="Images\icons\1480800465_beer.png" />
     <Content Include="Images\icons\home-2-24.png" />
+    <Content Include="Images\icons\Xave.PNG" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\icons\power-24.png" />
     <Content Include="Images\logo2.png" />
@@ -526,6 +528,7 @@
     <Content Include="Scripts\vendor\jquery-2.0.3.min.map" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\vendor\math.min.js" />
     <Content Include="Scripts\vendor\ui-bootstrap-tpls.min.js" />
     <Content Include="Scripts\vendor\ui-bootstrap.min.js" />
     <Content Include="Scripts\vendor\underscore-min.js" />
@@ -537,6 +540,7 @@
     <Content Include="sounds\Hah gay!.mp3" />
     <Content Include="sounds\Hallelujah Chorus Sound Effect.mp3" />
     <Content Include="sounds\Night_Sounds_-_Crickets-Lisa_Redfern-591005346.mp3" />
+    <Content Include="sounds\Oh Yeah %28Sound Effect%29.mp3" />
     <Content Include="sounds\Sheep-SoundBible.com-1847990075.mp3" />
     <Content Include="sounds\Silly_Farts-Joe-1473367952.mp3" />
     <Content Include="sounds\BooYouSuckSoundEffect.mp3" />
