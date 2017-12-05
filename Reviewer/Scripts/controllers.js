@@ -304,12 +304,25 @@ angular.module('app.controllers', [])
     }])
     .controller('dashboardCtrl', ['$scope', '$stateParams', '$location', '$window', '$state', '$timeout', 'TasteService', 'ToastService', 'signalRHubProxy', function ($scope, $stateParams, $location, $window, $state, $timeout, TasteService, ToastService, signalRHubProxy) {
         
+        $scope.DeleteUser = function (username) {
+            var person = prompt("Write the name of this user if you want to delete him");
+            if (person == username)
+            {
+                if (confirm("Are you sure you want to delete this user") == true) {
+                    console.log("Yes");
+                } else {
+                    console.log("No");
+                }
+            }
+        }
+
         $scope.LogOut = function () {
             localStorage.clear();
             $state.go('home');
         }
         ToastService.InitToast();
         $scope.initalLoad = true;
+        console.log("ding")
         TasteService.GetDashboard($stateParams.roomCode, $stateParams.pin).then(function (data) {
             if (data.status != 0) {
                 ToastService.Toast(data.message, false);

@@ -70,7 +70,7 @@
             <tbody ng-repeat="rev in currentReviews | userFilter:items" class="reviewsRow {{rev.userId}}">
                 <tr class="blink">
                     <td>{{$index + 1}}</td>
-                    <td>{{rev.username}}</td>
+                    <td style="cursor:pointer" ng-click="DeleteUser(rev.username)">{{rev.username}}</td>
                     <td class="right partScore {{GetAverageClass(part, rev)}}"  ng-if="rev.parts.length > 0" ng-repeat="part in rev.parts | reviewPartSorter:items">{{part.score}}</td>
                     <td class="right totalScore" ng-class="{higher: rev.totalScore >= rev.ave.aveScore, lower: rev.totalScore < rev.ave.aveScore}"><b>{{rev.totalScore}}</b></td>
                 </tr>
