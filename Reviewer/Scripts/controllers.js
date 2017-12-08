@@ -210,15 +210,19 @@ angular.module('app.controllers', [])
                 beers: $scope.selectedBeers,
                 categories: $scope.selectedCategories
             }
-
+            $scope.loading = true;
+            $scope.buttonDisabled = true;
             TasteService.FinishRoomCreation(requestObj).then(function (data) {
+                $scope.loading = false;
                 $state.go("dashboard", { "roomCode": localStorage.getItem("roomCode"), "pin": localStorage.getItem("pin") });
+            }, function () {
+                $scope.buttonDisabled = false;
             });
 
         }
     }])
 
-    .controller('UserCtrl', ['$scope', '$stateParams', '$location', '$window', 'TasteService', 'ToastService', function ($scope, $stateParams, $location, $window, TasteService, ToastService) {
+    .controller('UserCtrl', ['$scope', '$stateParams', '$location', '$window', 'TasteService', 'ToastService', 'signalRHubProxy', function ($scope, $stateParams, $location, $window, TasteService, ToastService, signalRHubProxy) {
         ToastService.InitToast();
         $scope.initalLoad = true;
         TasteService.GetRoom($stateParams.roomCode, localStorage.getItem("pin"), localStorage.getItem("userId")).then(function (data) {
@@ -301,15 +305,45 @@ angular.module('app.controllers', [])
                 beer.loading = false;
             });
         }
+
+        $scope.clientPushHubProxy = signalRHubProxy('beerhub');
+        setTimeout(function () {
+            $scope.clientPushHubProxy.invokeSingelParam("JoinRoomAsUser", $stateParams.roomCode, function (data) {
+                console.log(data);
+            });
+        }, 4000)
+
+        $scope.clientPushHubProxy.on("OpenBeer", function (data) {
+            $scope.currentBeer = data;
+        });
+        $scope.clientPushHubProxy.on("PushFinalScore", function (data) {
+            setTimeout(function () {
+                var beerToAddFinalTo = _.where($scope.data.beverages, { beverageId: data.beerId })[0];
+                beerToAddFinalTo.finalScore = data.finalScore;
+            }, 7100);
+        });
     }])
     .controller('dashboardCtrl', ['$scope', '$stateParams', '$location', '$window', '$state', '$timeout', 'TasteService', 'ToastService', 'signalRHubProxy', function ($scope, $stateParams, $location, $window, $state, $timeout, TasteService, ToastService, signalRHubProxy) {
-        
-        $scope.DeleteUser = function (username) {
+        ToastService.InitToast();
+        $scope.initalLoad = true;
+
+        $scope.DeleteUser = function (id) {
+            var user = _.where($scope.data.users, {id: id })[0]
+
             var person = prompt("Write the name of this user if you want to delete him");
-            if (person == username)
+            if (person == user.username)
             {
                 if (confirm("Are you sure you want to delete this user") == true) {
-                    console.log("Yes");
+                    var requestObj = {
+                        userId: user.id
+                    };
+                    TasteService.DeleteUser(requestObj).then(function (data) {
+                        ToastService.Toast(data, true);
+                        $scope.data.users = _.reject($scope.data.users, function (u) { return u.id == id });
+                        $scope.data.beverages.forEach(function (beer) {
+                            beer.reviews = _.reject(beer.reviews, function (b) { return b.userId == id });
+                        })
+                    })
                 } else {
                     console.log("No");
                 }
@@ -320,9 +354,8 @@ angular.module('app.controllers', [])
             localStorage.clear();
             $state.go('home');
         }
-        ToastService.InitToast();
-        $scope.initalLoad = true;
-        console.log("ding")
+
+
         TasteService.GetDashboard($stateParams.roomCode, $stateParams.pin).then(function (data) {
             if (data.status != 0) {
                 ToastService.Toast(data.message, false);
@@ -361,7 +394,11 @@ angular.module('app.controllers', [])
         }, 4000)
 
         $scope.clientPushHubProxy.on("NewUserJoined", function (data) {
-            $scope.data.usernames.push(data.username);
+            var userObj = {
+                username: data.username,
+                id: data.userId
+            }
+            $scope.data.users.push(userObj);
             var parts = [];
             $scope.data.reviewTypes.forEach(function (r) {
                 var part = {
@@ -373,21 +410,29 @@ angular.module('app.controllers', [])
                 parts.push(part);
             });
             
-            var rev = {
-                username: data.username,
-                userId: data.userId,
-                totalScore: 0,
-                comment: "",
-                parts: _.sortBy(parts, function (i) { return i.displayOrder; }),
-                ave: $scope.GetAveForUser(data.userId),
-                includeInCalculations: false
-            };
+            
             $scope.data.beverages.forEach(function (b) {
+                var rev = {
+                    id: getRandomInt(0, 100000),
+                    username: data.username,
+                    userId: data.userId,
+                    totalScore: 0,
+                    comment: "",
+                    parts: _.sortBy(parts, function (i) { return i.displayOrder; }),
+                    ave: $scope.GetAveForUser(data.userId),
+                    includeInCalculations: false
+                };
                 b.reviews.push(rev)
             });
 
             if ($scope.currentReviews.length > 0) {
                 $scope.currentReviews.push(rev);
+            }
+
+            function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
             }
         });
         
@@ -485,6 +530,7 @@ angular.module('app.controllers', [])
         $scope.lastDisplayOrder;
 
         $scope.OpenBeer = function (beer) {
+            console.log("Current Beer: ", beer);
             $scope.currentBeerId = "";
             $scope.showingResults = false;
 
@@ -495,6 +541,7 @@ angular.module('app.controllers', [])
             beer.loading = true;
                 
             TasteService.UnlockBeer($stateParams.roomCode, beer.beverageId).then(function (data) {
+                console.log("Beer data: ", data)
                 $scope.data.beverages.forEach(function (b) {
                     b.isOpen = false;
                 });
@@ -530,7 +577,7 @@ angular.module('app.controllers', [])
 
                 $scope.GetNumberOfVotes($scope.currentReviews);
                 $scope.currentBeerId = beer.beverageId;
-                console.log($scope.currentReviews);
+                console.log("Current Reviews: ", $scope.currentReviews);
                 $scope.CalculateBeerAverage();
             }, function () {
                 beer.loading = false;
@@ -709,6 +756,7 @@ angular.module('app.controllers', [])
                     var b = _.where($scope.data.beverages, { beverageId: $scope.currentBeerId })[0];
                     b.results = $scope.currentData;
                     b.weightedAve = $scope.CalculateBeerAverage(b.reviews);
+                    b.reviewFinished = true;
                 }, 7100);
 
                 $timeout(function () {
@@ -742,16 +790,16 @@ angular.module('app.controllers', [])
                                                     else if (data.totalScore >= 60 && data.totalScore < 70) {
                                                         applause.play();
                                                     }
-                                                    else if (data.totalScore >= 70 && data.totalScore < 80) {
+                                                    else if (data.totalScore >= 70 && data.totalScore < 75) {
                                                         cheer.play();
                                                     }
-                                                    else if (data.totalScore >= 80 && data.totalScore < 85) {
+                                                    else if (data.totalScore >= 75 && data.totalScore < 80) {
                                                         yeah.play();
                                                     }
-                                                    else if (data.totalScore >= 85 && data.totalScore < 90) {
+                                                    else if (data.totalScore >= 80 && data.totalScore < 85) {
                                                         haleluja.play();
                                                     }
-                                                    else if (data.totalScore >= 90 && data.totalScore < 100) {
+                                                    else if (data.totalScore >= 85 && data.totalScore < 100) {
                                                         uefa.play();
                                                     }
                                                 }, 1000)
@@ -771,7 +819,9 @@ angular.module('app.controllers', [])
     }])
     .controller('joinCtrl', ['$scope', '$stateParams', '$location', '$window', '$state', 'TasteService', 'ToastService', function ($scope, $stateParams, $location, $window, $state, TasteService, ToastService) {
         ToastService.InitToast();
-        $scope.room = new Object();
+        $scope.room = {
+            pin: null
+        }
         $scope.loading = false;
         $scope.JoinRoom = function(room) {
             $scope.loading = true;

@@ -18,22 +18,23 @@
         <div class="col-xs-12">
             <div class="col-xs-3 center">
                 <md-progress-circular class="md-accent md-hue-1" md-diameter="74" style="position: absolute; left: 9px;top: -2px;" ng-if="beer.loading"></md-progress-circular>
-                <img ng-src="{{beer.imageUrlSm}}" class="avatar userAvatar" alt="beerImage" width="35" />
-                <div class="alcPercent user">
+                <img ng-src="{{beer.imageUrlSm}}" class="avatar userAvatar" ng-class="{heart: currentBeer == beer.beverageId}" alt="" width="35" />
+                <div class="alcPercent user" >
                     {{beer.alcoholPercentage}}% - IBU <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span>
                 </div>
             </div>
             <div class="col-xs-9">
-                <h3>{{ beer.name }}</h3>
+                <h3 class="">{{ beer.name }}</h3>
                 <h4>{{ beer.manufacturer }}</h4>
                 <p>{{ beer.typeName }}</p>
-                <p>Your Review Score: {{GetTotal(beer)}}</p>
+                <p>Your Review Score: <b>{{GetTotal(beer)}}</b></p>
+                <p ng-if="beer.finalScore >= 0">Final Score: <b>{{beer.finalScore}}</b></p>
             </div>
         </div>
         <div class="col-xs-12 noPadding reviewContainer animate-slide" ng-show="beer.isOpen">
             <div class="col-xs-12 reviewRow" ng-repeat="reviewType in beer.reviewTypes">
                 <div class="col-xs-8 text">
-                    {{reviewType.name}}
+                    {{reviewType.name}} - {{reviewType.maxValue}}%
                 </div>
                 <div class="col-xs-4">
                     <md-select placeholder="{{reviewType.name}}" ng-model="reviewType.userValue">

@@ -171,6 +171,20 @@ angular.module('app.services', [])
             })
             return deferred.promise;
         },
+        DeleteUser: function (data) {
+            var deferred = $q.defer();
+            $http({
+                url: serviceUrl + 'api/Taster/DeleteUser',
+                method: 'POST',
+                data: data
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (data) {
+                ToastService.Toast(data.Message, false);
+                deferred.reject(false);
+            })
+            return deferred.promise;
+        },
         UnlockBeer: function (roomCode, beerId) {
             var deferred = $q.defer();
             $http({
@@ -297,6 +311,7 @@ angular.module('app.services', [])
 
 
 .value('signalRServer', "http://skalapi.azurewebsites.net/")
+//.value('signalRServer', "http://localhost:2264/")
 
 .factory('signalRHubProxy', ['$rootScope', 'signalRServer', 
     function ($rootScope, signalRServer) {

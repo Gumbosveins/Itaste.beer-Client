@@ -33,6 +33,11 @@
                     <h4>{{ beer.manufacturer }}</h4>
                     <p>{{ beer.typeName }}</p>
                 </div>
+                <div class="col-lg-2 center voted" ng-if="currentBeerId != beer.beverageId && beer.reviewFinished">
+                    <div class="col-lg-2 noPadding finalScore ">
+                        <div>{{beer.results.totalScore | number : 1}}</div>
+                    </div>
+                </div>
                 <div class="col-lg-2 center voted" ng-if="currentBeerId == beer.beverageId">
                     <b>Voted</b>
                     <div>{{voted}}/{{currentReviews.length}}</div>
@@ -53,9 +58,9 @@
     </div>
 
     <div ng-if="!initalLoad && !showingResults" class="col-lg-5 dashboardContainer dashboard scrollY">
-        <div ng-if="noBeerSelected" class="row reviewsRow" ng-repeat="username in data.usernames track by $index">
+        <div ng-if="noBeerSelected" class="row reviewsRow" ng-repeat="user in data.users track by $index">
             <div class="col-lg-12">
-                <div class="col-lg-12">{{$index + 1}}. {{username}}</div>
+                <div class="col-lg-12" ng-click="DeleteUser(user.id)">{{$index + 1}}. {{user.username}}</div>
             </div>
         </div>
         <table ng-if="!noBeerSelected" class="table">
@@ -70,7 +75,7 @@
             <tbody ng-repeat="rev in currentReviews | userFilter:items" class="reviewsRow {{rev.userId}}">
                 <tr class="blink">
                     <td>{{$index + 1}}</td>
-                    <td style="cursor:pointer" ng-click="DeleteUser(rev.username)">{{rev.username}}</td>
+                    <td style="cursor:pointer">{{rev.username}}</td>
                     <td class="right partScore {{GetAverageClass(part, rev)}}"  ng-if="rev.parts.length > 0" ng-repeat="part in rev.parts | reviewPartSorter:items">{{part.score}}</td>
                     <td class="right totalScore" ng-class="{higher: rev.totalScore >= rev.ave.aveScore, lower: rev.totalScore < rev.ave.aveScore}"><b>{{rev.totalScore}}</b></td>
                 </tr>
