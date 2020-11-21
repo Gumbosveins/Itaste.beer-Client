@@ -384,6 +384,9 @@ angular.module('app.controllers', [])
 
                 order++;
             });
+
+            $scope.data.hideBeers = data.isBlind;
+            $scope.data.unknownBeer = "~/Images/unknown.png";
         });
 
         $scope.clientPushHubProxy = signalRHubProxy('beerhub');

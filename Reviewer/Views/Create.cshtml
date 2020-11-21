@@ -20,11 +20,14 @@
                 <md-input-container class="md-block">
                     <input ng-model="room.roomName" type="text" placeholder="Room Name" ng-required="true">
                 </md-input-container>
-            </div>
-            <div class="col-xs-offset-1 col-xs-10 col-lg-10 cener whiteBackground">
                 <md-input-container class="md-block">
                     <input ng-model="room.pin" type="text" placeholder="Room Pin" ng-required="true">
                 </md-input-container>
+                Blind Tasting <input style="margin-bottom:4px;" ng-model="room.blind" type="checkbox" placeholder="Blind Tasting" class="checkbox-inline">
+                <md-input-container class="md-block" ng-if="room.blind">
+                    <input ng-model="room.revealCode" type="text" placeholder="Blind Reveal Code. Don't for get this code!" ng-required="room.blind">
+                </md-input-container>
+
             </div>
         </div>
 

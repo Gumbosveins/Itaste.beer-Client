@@ -22,6 +22,7 @@
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -155,6 +156,8 @@
     <Content Include="Content\variables.less" />
     <Content Include="Global.asax" />
     <Content Include="Images\icons\1480800465_beer.png" />
+    <Content Include="Images\icons\baseline_visibility_off_white_18dp.png" />
+    <Content Include="Images\icons\baseline_visibility_white_18dp.png" />
     <Content Include="Images\icons\home-2-24.png" />
     <Content Include="Images\icons\Xave.PNG" />
     <Content Include="Images\if_sign-check_299110.png" />
@@ -162,6 +165,7 @@
     <Content Include="Images\icons\power-24.png" />
     <Content Include="Images\logo2.png" />
     <Content Include="Images\skal.png" />
+    <Content Include="Images\unknown.png" />
     <Content Include="Scripts\angular-animate\angular-animate.js" />
     <Content Include="Scripts\angular-animate\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria\angular-aria.js" />

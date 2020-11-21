@@ -1,6 +1,6 @@
 ﻿'use strict';
-//var serviceUrl = "http://localhost:2264/"
-var serviceUrl = "http://skalapi.azurewebsites.net/"
+var serviceUrl = "http://localhost:2264/"
+//var serviceUrl = "http://skalapi.azurewebsites.net/"
 // Declares how the application should be bootstrapped. See: http://docs.angularjs.org/guide/module
 angular.module('app', ['ngMaterial', 'ui.router', 'app.filters', 'app.services', 'app.directives', 'app.controllers'])
 
