@@ -6245,10 +6245,10 @@ md-toolbar {
   min-height: 83px;
 }
 .dashboard.ranking .beerRank {
-  position: absolute;
-  left: -10px;
-  top: -10px;
-  font-weight: 800;
+    position: absolute;
+    left: -10px;
+    top: -7px;
+    font-weight: 800;
 }
 .dashboard.ranking .finalScore {
   margin-top: 30px;
@@ -6422,3 +6422,27 @@ div:focus {
   }
 }
 /*# sourceMappingURL=app.css.map */
+
+
+.beerNumber {
+    position: relative !important;
+    left: 5px !important;
+    top: -7px !important;
+    font-weight: 800 !important;
+}
+
+.howButton {
+    background: #A9A9A9 !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.howItWorks {
+    background: white;
+    text-align: center;
+}
+
+.donate {
+    position: absolute;
+    right: 10px;
+    top:10px;
+}

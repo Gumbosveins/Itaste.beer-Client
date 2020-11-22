@@ -2,22 +2,29 @@
     PageData["title"] = "AngularJS SPA Template for Visual Studio";
 }
 
-<div class="indexPage">
-    <div class="mainLogo">
-        <img src="~/Images/logo.png" />
+    <div class="indexPage">
+            <form action="https://www.paypal.com/donate" method="post" target="_top" class="donate">
+                <input type="hidden" name="hosted_button_id" value="2LEJX3PPL3A26" />
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                <img alt="" border="0" src="https://www.paypal.com/en_IS/i/scr/pixel.gif" width="1" height="1" />
+            </form>
+        <div class="mainLogo">
+            <img src="~/Images/logo.png" />
+        </div>
+
+
+        <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+            <a ui-sref="createRoom"><md-button class="md-raised frontButton createButton">Create Room</md-button></a>
+            <a ui-sref="joinroom"><md-button class="md-raised md-primary frontButton joinButton">Join Room</md-button></a>
+            <a ui-sref="opendashboard"><md-button class="md-raised md-primary frontButton dashboardButton">Open Dashboard</md-button></a>
+            <a ui-sref="howitworks"><md-button class="md-raised md-primary frontButton howButton">How it works</md-button></a>
+            <a ng-click="Continue()" ng-if="continue">
+                <md-button class="md-raised md-primary frontButton continueButtom">
+                    <div>Continue</div>
+                    <div>{{username}}</div>
+                    <div>Room: {{code}}</div>
+                </md-button>
+            </a>
+        </section>
+
     </div>
-
-
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-        <a ui-sref="createRoom"><md-button class="md-raised frontButton createButton">Create Room</md-button></a>
-        <a ui-sref="joinroom"><md-button class="md-raised md-primary frontButton joinButton">Join Room</md-button></a>
-        <a ui-sref="opendashboard"><md-button class="md-raised md-primary frontButton dashboardButton">Open Dashboard</md-button></a>
-        <a ng-click="Continue()" ng-if="continue">
-            <md-button class="md-raised md-primary frontButton continueButtom">
-                <div>Continue</div>
-                <div>{{username}}</div>
-                <div>Room: {{code}}</div>   
-            </md-button>
-        </a>
-    </section>
-</div>

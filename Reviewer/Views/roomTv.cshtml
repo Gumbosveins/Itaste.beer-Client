@@ -8,9 +8,9 @@
             <span flex></span>
             <span ng-if="data.code">Room Code: {{data.code}}</span>
             <span flex></span>
-            <md-button class="md-icon-button" aria-label="Show/Hide beers" ng-if="data.isBlind" ng-click="data.hideBeers = !data.hideBeers">
-                <img src="~/Images/icons/baseline_visibility_white_18dp.png" style="width: 27px;" ng-if="data.hideBeers" />
-                <img src="~/Images/icons/baseline_visibility_off_white_18dp.png" style="width: 27px;" ng-if="!data.hideBeers"/>
+            <md-button class="md-icon-button" aria-label="Show/Hide beers" ng-if="data.isBlind">
+                <img src="~/Images/icons/baseline_visibility_white_18dp.png" style="width: 27px;" ng-click="ShowBeers()" />
+                <img src="~/Images/icons/baseline_visibility_off_white_18dp.png" style="width: 27px;" ng-if="!data.hideBeers" ng-click="data.hideBeers = !data.hideBeers"/>
             </md-button>
             <md-button class="md-icon-button" aria-label="More" ng-click="LogOut()">
                 <img src="~/Images/icons/power-24.png"/>
@@ -24,6 +24,7 @@
     </div>
     <div ng-if="!initalLoad" class="col-lg-4 dashboardContainer dashboard scrollY">
         <div class="row userBeerRow" ng-repeat="beer in data.beverages | beerFilter:items" ng-click="OpenBeer(beer)">
+            <div class="beerNumber">{{$index + 1}}</div>
             <div class="col-lg-12 beerinfo">
                 <div class="col-lg-3 center" style="position:relative;">
                     <md-progress-circular class="md-accent md-hue-1" md-diameter="74" style="position: absolute; left: 2px; top: -4px;" ng-if="beer.loading"></md-progress-circular>

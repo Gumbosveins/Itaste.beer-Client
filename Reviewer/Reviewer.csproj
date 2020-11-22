@@ -155,6 +155,12 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="Content\variables.less" />
     <Content Include="Global.asax" />
+    <Content Include="Images\How\blind.PNG" />
+    <Content Include="Images\How\category.PNG" />
+    <Content Include="Images\How\dash.PNG" />
+    <Content Include="Images\How\finish.PNG" />
+    <Content Include="Images\How\selectBeers.PNG" />
+    <Content Include="Images\How\userroom.PNG" />
     <Content Include="Images\icons\1480800465_beer.png" />
     <Content Include="Images\icons\baseline_visibility_off_white_18dp.png" />
     <Content Include="Images\icons\baseline_visibility_white_18dp.png" />
@@ -573,6 +579,7 @@
     <Content Include="Views\userRoom.cshtml" />
     <Content Include="Views\Join.cshtml" />
     <Content Include="Views\openDashboard.cshtml" />
+    <Content Include="Views\how.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
