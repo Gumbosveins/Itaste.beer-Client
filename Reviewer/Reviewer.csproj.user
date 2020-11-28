@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <NameOfLastUsedPublishProfile>skal - Web Deploy</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>skal - Web Deploy1</NameOfLastUsedPublishProfile>
     <UseIISExpress>true</UseIISExpress>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
     <Use64BitIISExpress />

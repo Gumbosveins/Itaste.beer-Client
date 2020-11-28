@@ -16,19 +16,30 @@
 
     <div class="row userBeerRow" ng-repeat="beer in data.beverages" ng-click="OpenBeer(beer)">
         <div class="col-xs-12">
+            <div class="beerNumber">{{$index + 1}}</div>
             <div class="col-xs-3 center">
                 <md-progress-circular class="md-accent md-hue-1" md-diameter="74" style="position: absolute; left: 9px;top: -2px;" ng-if="beer.loading"></md-progress-circular>
-                <img ng-src="{{beer.imageUrlSm}}" class="avatar userAvatar" ng-class="{heart: currentBeer == beer.beverageId}" alt="" width="35" />
-                <div class="alcPercent user" >
+                <img ng-if="!data.isBlind" ng-src="{{beer.imageUrlSm}}" class="avatar userAvatar" ng-class="{heart: currentBeer == beer.beverageId}" alt="" width="35" />
+                <img ng-if="data.isBlind" src="~/Images/unknown.png" class="avatar userAvatar" ng-class="{heart: currentBeer == beer.beverageId}" alt="" width="35" />
+                <div class="alcPercent user">
                     {{beer.alcoholPercentage}}% - IBU <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span>
                 </div>
             </div>
             <div class="col-xs-9">
-                <h3 class="">{{ beer.name }}</h3>
-                <h4>{{ beer.manufacturer }}</h4>
-                <p>{{ beer.typeName }}</p>
-                <p>Your Review Score: <b>{{GetTotal(beer)}}</b></p>
-                <p ng-if="beer.finalScore >= 0">Final Score: <b>{{beer.finalScore}}</b></p>
+                <h3>
+                    <span ng-if="!data.isBlind">{{ beer.name }}</span>
+                    <span ng-if="data.isBlind">?????????????</span>
+                </h3>
+                <h4>
+                    <span ng-if="!data.isBlind">{{ beer.manufacturer }}</span>
+                    <span ng-if="data.isBlind">?????????????</span>
+                </h4>
+                <p>
+                    <span ng-if="!data.isBlind">{{ beer.typeName }}</span>
+                    <span ng-if="data.isBlind">?????????????</span>
+                </p>
+                <p>Your Review Score: <b>{{GetTotal(beer) | number : 1}}</b></p>
+                <p ng-if="beer.finalScore >= 0">Final Score: <b>{{beer.finalScore | number: 1}}</b></p>
             </div>
         </div>
         <div class="col-xs-12 noPadding reviewContainer animate-slide" ng-show="beer.isOpen">
@@ -44,7 +55,8 @@
             </div>
             <div class="col-xs-offset-1 col-xs-10 col-lg-10 cener">
                 <md-input-container class="md-block">
-                    <input ng-model="beer.comment" type="text" placeholder="Comment" >
+                    <input ng-if="!data.isBlind" ng-model="beer.comment" type="text" placeholder="Comment">
+                    <input ng-if="data.isBlind" ng-model="beer.comment" type="text" placeholder="Guess Beer Name">
                 </md-input-container>
             </div>
             <div class="col-xs-12">

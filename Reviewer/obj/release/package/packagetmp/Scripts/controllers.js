@@ -22,6 +22,9 @@ angular.module('app.controllers', [])
         }
     }])
 
+    .controller('HowCtrl', ['$scope', '$location', '$window', '$state', 'beerService', function ($scope, $location, $window, $state, beerService) {
+    }])
+
     // Path: /about
     .controller('CreateCtrl', ['$scope', '$location', '$window', '$state', 'TasteService', 'ToastService', function ($scope, $location, $window, $state, TasteService, ToastService) {
 
@@ -227,8 +230,8 @@ angular.module('app.controllers', [])
         $scope.initalLoad = true;
         TasteService.GetRoom($stateParams.roomCode, localStorage.getItem("pin"), localStorage.getItem("userId")).then(function (data) {
             $scope.initalLoad = false;
+            data.isBlind = false;
             $scope.data = data;
-            console.log(data);
 
             $scope.data.beverages.forEach(function (b) {
                 b.loading = false;
@@ -266,13 +269,13 @@ angular.module('app.controllers', [])
         }
 
         $scope.GetTotal = function (beer) {
-            return _.reduce(beer.reviewTypes, function (memo, type) { return memo + type.userValue; }, 0);
+            return _.reduce(beer.reviewTypes, function (memo, type) { return memo + type.userValue * (type.maxValue / 100); }, 0);
 
         }
 
         $scope.GetSelectArr = function (maxNumber) {
             var arr = [];
-            for (var i = 0; i <= maxNumber; i++) {
+            for (var i = 0; i <= 10; i++) {
                 arr.push(i);
             }
             return arr;
@@ -282,6 +285,8 @@ angular.module('app.controllers', [])
             beer.loading = true;
             var parts = []
             beer.reviewTypes.forEach(function (r) {
+                var userValue = (r.maxValue / 100) * r.userValue;
+                console.log(userValue);
                 var newPart = {
                     reviewTypeId: r.reviewId,
                     score: r.userValue
@@ -311,10 +316,12 @@ angular.module('app.controllers', [])
             $scope.clientPushHubProxy.invokeSingelParam("JoinRoomAsUser", $stateParams.roomCode, function (data) {
                 console.log(data);
             });
-        }, 4000)
+        }, 4000);
 
-        $scope.clientPushHubProxy.on("OpenBeer", function (data) {
+        $scope.clientPushHubProxy.on("OpenBeer", function (data) {  
             $scope.currentBeer = data;
+            var currentBeer = _.where($scope.data.beverages, { beverageId: data })[0];
+            $scope.OpenBeer(currentBeer);
         });
         $scope.clientPushHubProxy.on("PushFinalScore", function (data) {
             setTimeout(function () {
@@ -347,6 +354,21 @@ angular.module('app.controllers', [])
                 } else {
                     console.log("No");
                 }
+            }
+        }
+
+        $scope.ShowBeers = function () {
+            if ($scope.data.hideBeers) {
+                var person = prompt("Reveal beers password");
+                if (person === $scope.data.blindRevealCode) {
+                    $scope.data.hideBeers = false;
+                }
+                else {
+                    alert("Wrong Password");
+                }
+            }
+            else {
+                $scope.data.hideBeers = true;
             }
         }
 
@@ -384,6 +406,9 @@ angular.module('app.controllers', [])
 
                 order++;
             });
+
+            $scope.data.hideBeers = data.isBlind;
+            $scope.data.unknownBeer = "~/Images/unknown.png";
         });
 
         $scope.clientPushHubProxy = signalRHubProxy('beerhub');
@@ -497,25 +522,25 @@ angular.module('app.controllers', [])
             var lessGreen = "#b2d8b2";
             var success = "#008000";
             var colorToUse;
-            if (user.totalScore <= 10)
+            if (user.totalScore <= 1)
                 colorToUse = red;
-            else if (user.totalScore <= 20)
+            else if (user.totalScore <= 2)
                 colorToUse = pink;
-            else if (user.totalScore <= 30)
+            else if (user.totalScore <= 3)
                 colorToUse = orange;
-            else if (user.totalScore <= 40)
+            else if (user.totalScore <= 4)
                 colorToUse = lessOrange;
-            else if (user.totalScore <= 50) {
+            else if (user.totalScore <= 5) {
                 colorToUse = yellow;
                 textColor = "#7e7e7e";
             }
-            else if (user.totalScore <= 60) {
+            else if (user.totalScore <= 6) {
                 colorToUse = lessYellow;
                 textColor = "#7e7e7e";
             }
-            else if (user.totalScore <= 80)
+            else if (user.totalScore <= 8)
                 colorToUse = lessGreen;
-            else if (user.totalScore <= 100)
+            else if (user.totalScore <= 10)
                 colorToUse = success;
             $(".reviewsRow." + data.userId + " .blink").css("background-color", colorToUse);
             $(".reviewsRow." + data.userId + " .blink").css("color", textColor);
@@ -775,31 +800,31 @@ angular.module('app.controllers', [])
                                                 $(".current .final.heart").fadeIn(3000)
                                                 $(".current .currentRanking").fadeIn(3000)
                                                 $timeout(function () {
-                                                    if (data.totalScore < 20) {
+                                                    if (data.totalScore < 2) {
                                                         booYouSuck.play();
                                                     }
-                                                    else if (data.totalScore >= 0 && data.totalScore < 30) {
+                                                    else if (data.totalScore >= 0 && data.totalScore < 3) {
                                                         gay.play();
                                                     }
-                                                    else if (data.totalScore >= 30 && data.totalScore < 45) {
+                                                    else if (data.totalScore >= 3 && data.totalScore < 4.5) {
                                                         comeOn1.play();
                                                     }
-                                                    else if (data.totalScore >= 45 && data.totalScore < 60) {
+                                                    else if (data.totalScore >= 4.5 && data.totalScore < 6) {
                                                         golf.play();
                                                     }
-                                                    else if (data.totalScore >= 60 && data.totalScore < 70) {
+                                                    else if (data.totalScore >= 6 && data.totalScore < 7) {
                                                         applause.play();
                                                     }
-                                                    else if (data.totalScore >= 70 && data.totalScore < 75) {
-                                                        cheer.play();
-                                                    }
-                                                    else if (data.totalScore >= 75 && data.totalScore < 80) {
+                                                    else if (data.totalScore >= 7 && data.totalScore < 7.5) {
                                                         yeah.play();
                                                     }
-                                                    else if (data.totalScore >= 80 && data.totalScore < 85) {
+                                                    else if (data.totalScore >= 7.5 && data.totalScore < 8) {
+                                                        cheer.play();
+                                                    }
+                                                    else if (data.totalScore >= 8 && data.totalScore < 8.5) {
                                                         haleluja.play();
                                                     }
-                                                    else if (data.totalScore >= 85 && data.totalScore < 100) {
+                                                    else if (data.totalScore >= 8.5 && data.totalScore < 10) {
                                                         uefa.play();
                                                     }
                                                 }, 1000)

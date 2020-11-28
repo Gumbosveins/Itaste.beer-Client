@@ -8,8 +8,12 @@
             <span flex></span>
             <span ng-if="data.code">Room Code: {{data.code}}</span>
             <span flex></span>
+            <md-button class="md-icon-button" aria-label="Show/Hide beers" ng-if="data.isBlind">
+                <img src="~/Images/icons/baseline_visibility_white_18dp.png" style="width: 27px;" ng-click="ShowBeers()" />
+                <img src="~/Images/icons/baseline_visibility_off_white_18dp.png" style="width: 27px;" ng-if="!data.hideBeers" ng-click="data.hideBeers = !data.hideBeers"/>
+            </md-button>
             <md-button class="md-icon-button" aria-label="More" ng-click="LogOut()">
-                <img src="~/Images/icons/power-24.png" />
+                <img src="~/Images/icons/power-24.png"/>
             </md-button>
         </div>
     </md-toolbar>
@@ -20,18 +24,29 @@
     </div>
     <div ng-if="!initalLoad" class="col-lg-4 dashboardContainer dashboard scrollY">
         <div class="row userBeerRow" ng-repeat="beer in data.beverages | beerFilter:items" ng-click="OpenBeer(beer)">
+            <div class="beerNumber">{{$index + 1}}</div>
             <div class="col-lg-12 beerinfo">
                 <div class="col-lg-3 center" style="position:relative;">
                     <md-progress-circular class="md-accent md-hue-1" md-diameter="74" style="position: absolute; left: 2px; top: -4px;" ng-if="beer.loading"></md-progress-circular>
-                    <img ng-src="{{beer.imageUrlSm}}" class="avatar" alt="beerImage" width="35" style="position: absolute; left: 9px;top: -2px;" />
+                    <img ng-if="!data.hideBeers" ng-src="{{beer.imageUrlSm}}" class="avatar" alt="beerImage" width="35" style="position: absolute; left: 9px;top: -2px;" />
+                    <img ng-if="data.hideBeers" src="~/Images/unknown.png" class="avatar" alt="beerImage" width="35" style="position: absolute; left: 9px;top: -2px;" />
                     <div class="alcPercent" style="position: absolute; left: 6px; top: 69px;">
                         {{beer.alcoholPercentage}}% - IBU <span ng-if="beer.IBU > 0">{{beer.IBU}}</span><span ng-if="beer.IBU == 0">N/A</span>
                     </div>
                 </div>
                 <div class="col-lg-7">
-                    <h3>{{ beer.name }}</h3>
-                    <h4>{{ beer.manufacturer }}</h4>
-                    <p>{{ beer.typeName }}</p>
+                    <h3>
+                        <span ng-if="!data.hideBeers">{{ beer.name }}</span>
+                        <span ng-if="data.hideBeers">?????????????</span>
+                    </h3>
+                    <h4>
+                        <span ng-if="!data.hideBeers">{{ beer.manufacturer }}</span>
+                        <span ng-if="data.hideBeers">?????????????</span>
+                    </h4>
+                    <p>
+                        <span ng-if="!data.hideBeers">{{ beer.typeName }}</span>
+                        <span ng-if="data.hideBeers">?????????????</span>
+                    </p>
                 </div>
                 <div class="col-lg-2 center voted" ng-if="currentBeerId != beer.beverageId && beer.reviewFinished">
                     <div class="col-lg-2 noPadding finalScore ">
@@ -45,12 +60,12 @@
             </div>
             <div class="col-lg-12 noPadding reviewContainer animate-slide" ng-show="beer.isOpen">
                 <div class="col-lg-5 ">
-                    <img ng-src="{{beer.imageUrlMed}}" ng-if="beer.imageUrlMed.length > 0" alt="beerImage" width="150" />
-                    <img ng-src="{{beer.imageUrlSm}}" ng-if="beer.imageUrlMed.length == 0" alt="beerImage" width="150" />
+                    <img ng-src="{{beer.imageUrlMed}}" ng-if="beer.imageUrlMed.length > 0 && !data.hideBeers" alt="beerImage" width="150" />
+                    <img ng-src="{{beer.imageUrlSm}}" ng-if="beer.imageUrlMed.length == 0 && !data.hideBeers" alt="beerImage" width="150" />
                     <a ng-click="FinsihReview(beer)"><md-button style="margin-left: 1px;" class="md-raised voteButton">Review Finished</md-button></a>
 
                 </div>
-                <div class="col-lg-7 ">
+                <div ng-if="!data.hideBeers" class="col-lg-7 ">
                     {{beer.desc}}
                 </div>
             </div>
@@ -95,11 +110,14 @@
     <div ng-if="!initalLoad && showingResults" class="col-lg-5 dashboardContainer dashboard current scrollY">
         <div class="row">
             <div class="col-lg-12">
-                <div class="name">{{selectedBeer.name}}</div>
-                <div class="manufacturer">{{selectedBeer.manufacturer}}</div>
+                <div class="name" ng-if="!data.hideBeers">{{selectedBeer.name}}</div>
+                <div class="name" ng-if="data.hideBeers">????????????</div>
+                <div class="manufacturer" ng-if="!data.hideBeers">{{selectedBeer.manufacturer}}</div>
+                <div class="manufacturer" ng-if="data.hideBeers">????????????</div>
                 <div class="ratingHeader">Current Ranking: <span class="currentRanking">{{currentRank}}</span></div>
 
-                <div class="img"><img src="{{selectedBeer.imageUrlMed}}" width="350" /></div>
+                <div class="img" ng-if="!data.hideBeers"><img src="{{selectedBeer.imageUrlMed}}" width="350" /></div>
+                <div class="img" ng-if="data.hideBeers"><img src="~/Images/unknown.png" width="350" /></div>
 
                 <div class="ratingHeader success">Highest Rating</div>
                 <div class="ratingResult success">{{highest.username}}: <span class="">{{highest.totalScore}}</span></div>
@@ -115,10 +133,12 @@
             <div class="col-lg-12 beerinfo">
                 <div class="col-lg-3 center" style="position:relative;">
                     <div class="beerRank">{{$index + 1}}</div>
-                    <img ng-src="{{beer.imageUrlSm}}" class="avatar" alt="beerImage" width="35" style="" />
+                    <img ng-if="!data.hideBeers" ng-src="{{beer.imageUrlSm}}" class="avatar" alt="beerImage" width="35" style="" />
+                    <img ng-if="data.hideBeers" src="~/Images/unknown.png" class="avatar" alt="beerImage" width="35" style="" />
                 </div>
                 <div class="col-lg-7">
-                    <h3>{{ beer.name }}</h3>
+                    <h3 ng-if="!data.hideBeers">{{ beer.name }}</h3>
+                    <h3 ng-if="data.hideBeers">?????????</h3>
                     <div class="row">
                         <div class="col-lg-6" ng-repeat="part in beer.results.partResults">
                             <b>{{part.abbr}}:</b> <span>{{part.score | number : 1}}</span>
