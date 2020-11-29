@@ -533,9 +533,12 @@
     <Content Include="Scripts\angular-animate\angular-animate.min.js.map" />
     <None Include="Properties\PublishProfiles\skal - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\skal - FTP1.pubxml" />
+    <None Include="Properties\PublishProfiles\skal - FTP2.pubxml" />
     <None Include="Properties\PublishProfiles\skal - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\skal - ReadOnly - FTP1.pubxml" />
     <None Include="Properties\PublishProfiles\skal - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\skal - Web Deploy1.pubxml" />
+    <None Include="Properties\PublishProfiles\skal - Web Deploy2.pubxml" />
     <None Include="Scripts\vendor\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\vendor\jquery-2.0.3.js" />
     <Content Include="Scripts\vendor\jquery-2.0.3.min.js" />
