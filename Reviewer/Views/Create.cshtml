@@ -21,7 +21,7 @@
                     <input ng-model="room.roomName" type="text" placeholder="Room Name" ng-required="true">
                 </md-input-container>
                 <md-input-container class="md-block">
-                    <input ng-model="room.pin" type="text" placeholder="Room Pin" ng-required="true">
+                    <input ng-model="room.pin" type="text" placeholder="Room Pin (4 digits! ONLY NUMBERS!) " ng-required="true">
                 </md-input-container>
                 Blind Tasting <input style="margin-bottom:4px;" ng-model="room.blind" type="checkbox" placeholder="Blind Tasting" class="checkbox-inline">
                 <md-input-container class="md-block" ng-if="room.blind">
