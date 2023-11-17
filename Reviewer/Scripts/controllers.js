@@ -230,7 +230,6 @@ angular.module('app.controllers', [])
         $scope.initalLoad = true;
         TasteService.GetRoom($stateParams.roomCode, localStorage.getItem("pin"), localStorage.getItem("userId")).then(function (data) {
             $scope.initalLoad = false;
-            data.isBlind = false;
             $scope.data = data;
 
             $scope.data.beverages.forEach(function (b) {
