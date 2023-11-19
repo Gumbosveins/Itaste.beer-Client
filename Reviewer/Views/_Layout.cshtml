@@ -1,14 +1,23 @@
 ﻿<!DOCTYPE html>
 <html lang="en" ng-app="app">
 <head>
+    <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154625554-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'UA-154625554-1');
+        </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title ng-bind="title">iTaste.beer</title>
     <meta name="description" content="@PageData["description"]">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" 
-      type="image/png" 
-      href="~/Images/icons/1480800465_beer.png" />
+    <link rel="icon"
+          type="image/png"
+          href="~/Images/icons/1480800465_beer.png" />
     <base href="~/">
     @Styles.Render("~/content/css/app")
     @*<link rel="stylesheet" href="https://gitcdn.xyz/repo/angular/bower-material/master/angular-material.css">*@

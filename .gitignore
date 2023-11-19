@@ -21,8 +21,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-obj/
-bin/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -262,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /.vscode
+__mismatch__/
