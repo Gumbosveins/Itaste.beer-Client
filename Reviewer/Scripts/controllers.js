@@ -7,7 +7,7 @@ angular.module('app.controllers', [])
 
     // Path: /
     .controller('HomeCtrl', ['$scope', '$location', '$window', '$state', 'beerService', function ($scope, $location, $window, $state, beerService) {
-        
+
         if(localStorage.getItem("userId") != null
         && localStorage.getItem("roomCode") != null
         && localStorage.getItem("pin") != null
@@ -27,7 +27,6 @@ angular.module('app.controllers', [])
 
     // Path: /about
     .controller('CreateCtrl', ['$scope', '$location', '$window', '$state', 'TasteService', 'ToastService', function ($scope, $location, $window, $state, TasteService, ToastService) {
-
 
         ToastService.InitToast();
         $scope.room = new Object();
@@ -312,7 +311,7 @@ angular.module('app.controllers', [])
 
         $scope.clientPushHubProxy = signalRHubProxy('beerhub');
         setTimeout(function () {
-            $scope.clientPushHubProxy.invokeSingelParam("JoinRoomAsUser", $stateParams.roomCode, function (data) {
+            $scope.clientPushHubProxy.invokeSingleParam("JoinRoomAsUser", $stateParams.roomCode, function (data) {
                 console.log(data);
             });
         }, 4000);
@@ -412,7 +411,7 @@ angular.module('app.controllers', [])
 
         $scope.clientPushHubProxy = signalRHubProxy('beerhub');
         setTimeout(function () {
-            $scope.clientPushHubProxy.invokeSingelParam("JoinRoom", $stateParams.roomCode, function (data) {
+            $scope.clientPushHubProxy.invokeSingleParam("JoinRoom", $stateParams.roomCode, function (data) {
                 console.log(data);
             });
         }, 4000)

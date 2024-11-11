@@ -190,12 +190,14 @@
     <Content Include="Scripts\directives.spec.js">
       <DependentUpon>directives.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\signalr.min.js" />
+    <Content Include="Scripts\filters - Copy.spec.js">
+      <DependentUpon>signalr.min.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\filters.js" />
     <Content Include="Scripts\filters.spec.js">
       <DependentUpon>filters.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\services.js" />
     <Content Include="Scripts\services.spec.js">
       <DependentUpon>services.js</DependentUpon>

@@ -25,6 +25,7 @@ namespace App.Reviewer
             bundles.Add(new ScriptBundle("~/js/jquery").Include("~/scripts/vendor/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/js/app").Include(
+                "~/scripts/signalr.min.js",
                 "~/scripts/angular/angular.js",
                 "~/scripts/angular-aria/angular-aria.js",
                 "~/scripts/angular-animate/angular-animate.js",
@@ -32,7 +33,6 @@ namespace App.Reviewer
                 "~/scripts/angular/angular-drag-and-drop-lists.min.js",
                 "~/scripts/vendor/angular-ui-router.js",
                 "~/scripts/vendor/jquery.marquee.js",
-                "~/scripts/jquery.signalR-2.2.0.min.js",
                 "~/scripts/toastr.min.js",
                 "~/scripts/vendor/underscore-min.js",
                 "~/scripts/vendor/math.min.js",
