@@ -260,6 +260,3 @@ paket-files/
 __pycache__/
 *.pyc
 /.vscode
-
-#Test result files
-FlightNlgService/StaticData/FlightIdTest/
