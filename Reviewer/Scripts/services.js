@@ -310,8 +310,8 @@ angular.module('app.services', [])
 }])
 
 
-////.value('signalRServer', "https://skalapi.azurewebsites.net/")
-    .value('signalRServer', "https://localhost:7283")
+    .value('signalRServer', "https://itbapi.azurewebsites.net")
+////.value('signalRServer', "https://localhost:7283")
 
     .factory('signalRHubProxy', ['$rootScope', 'signalRServer',
         function ($rootScope, signalRServer) {
