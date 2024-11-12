@@ -310,60 +310,43 @@ angular.module('app.services', [])
 }])
 
 
-.value('signalRServer', "https://skalapi.azurewebsites.net/")
-////.value('signalRServer', "http://localhost:2264/")
+////.value('signalRServer', "https://skalapi.azurewebsites.net/")
+    .value('signalRServer', "https://localhost:7283")
 
-.factory('signalRHubProxy', ['$rootScope', 'signalRServer', 
-    function ($rootScope, signalRServer) {
+    .factory('signalRHubProxy', ['$rootScope', 'signalRServer',
+        function ($rootScope, signalRServer) {
 
-        function signalRHubProxyFactory(hubName, startOptions) {
+            function signalRHubProxyFactory(hubName, startOptions) {
+                // Initialize the connection using the new SignalR API
+                var connection = new signalR.HubConnectionBuilder()
+                    .withUrl(signalRServer + "/beerhub")
+                    .configureLogging(signalR.LogLevel.Information)
+                    .build();
 
-            var connection = $.hubConnection(signalRServer);
-            var proxy = connection.createHubProxy(hubName);
-            $.connection.hub.logging = true;
-            connection.start({ transport: 'webSockets', jsonp: true }).done(function (data) {
-                console.log(data);
-            });
-            connection.reconnected(function (data) {
-            });
-            connection.disconnected(function (data) {
-            });
-            connection.reconnecting(function (data) {
-            });
-            return {
-                on: function (eventName, callback) {
-                    proxy.on(eventName, function (result) {
-                        $rootScope.$apply(function () {
-                            if (callback) {
-                                callback(result);
-                            }
+                connection.start()
+                    .then(() => console.log("Connected to SignalR hub"))
+                    .catch(err => console.error("SignalR connection error:", err));
+
+                return {
+                    on: function (eventName, callback) {
+                        console.log("Setting up event listener for:", eventName); // Debugging log
+                        connection.on(eventName, function (result) {
+                            $rootScope.$apply(() => callback(result));
                         });
-                    });
-                },
-                invokeNoParam: function (methodName, callback) {
-                    proxy.invoke(methodName)
-                        .done(function (result) {
-                            $rootScope.$apply(function () {
-                                if (callback) {
-                                    callback(result);
-                                }
-                            });
-                        });
-                },
-                invokeSingelParam: function (methodName, p, callback) {
-                    proxy.invoke(methodName, p)
-                        .done(function (result) {
-                            $rootScope.$apply(function () {
-                                if (callback) {
-                                    callback(result);
-                                }
-                            });
-                        });
-                },
-                connection: connection
-            };
-        };
+                    },
+                    invokeNoParam: function (methodName, callback) {
+                        connection.invoke(methodName)
+                            .then(result => $rootScope.$apply(() => callback(result)))
+                            .catch(err => console.error("Invoke error:", err));
+                    },
+                    invokeSingleParam: function (methodName, param, callback) {
+                        connection.invoke(methodName, param)
+                            .then(result => $rootScope.$apply(() => callback(result)))
+                            .catch(err => console.error("Invoke error:", err));
+                    },
+                    connection: connection
+                };
+            }
 
-        return signalRHubProxyFactory;
-    }])
-
+            return signalRHubProxyFactory;
+        }]);

@@ -260,4 +260,3 @@ paket-files/
 __pycache__/
 *.pyc
 /.vscode
-__mismatch__/
