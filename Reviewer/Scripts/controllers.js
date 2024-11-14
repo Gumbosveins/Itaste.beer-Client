@@ -221,6 +221,8 @@ angular.module('app.controllers', [])
                 $scope.buttonDisabled = false;
             });
 
+            $scope.loading = false;
+            $scope.buttonDisabled = false;
         }
     }])
 
