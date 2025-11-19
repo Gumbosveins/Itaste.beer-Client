@@ -1,8 +1,8 @@
 ﻿'use strict';
-////var serviceUrl = "https://localhost:7283/"
-var serviceUrl = "https://itbapi.azurewebsites.net/"
+var serviceUrl = "http://localhost:5082/"
+//var serviceUrl = "https://itbapi-ftcrdaaucpb5gme4.canadacentral-01.azurewebsites.net/"
 // Declares how the application should be bootstrapped. See: http://docs.angularjs.org/guide/module
-angular.module('app', ['ngMaterial', 'ui.router', 'app.filters', 'app.services', 'app.directives', 'app.controllers'])
+angular.module('app', ['ngMaterial', 'ui.router', 'razorShim', 'app.filters', 'app.services', 'app.directives', 'app.controllers'])
 
     // Gets executed during the provider registrations and configuration phase. Only providers and constants can be
     // injected here. This is to prevent accidental instantiation of services before they have been fully configured.
@@ -73,10 +73,15 @@ angular.module('app', ['ngMaterial', 'ui.router', 'app.filters', 'app.services',
             count: 0,
             selectedDirection: 'right'
         };
-        // <ui-view> contains a pre-rendered template for the current view
-        // caching it will prevent a round-trip to a server at the first page load
-        var view = angular.element('#ui-view');
-        $templateCache.put(view.data('tmpl-url'), view.html());
+        // <ui-view> may contain a pre-rendered template for the current view (legacy server-side render)
+        // Only cache it if there is actual content; otherwise let $http fetch the templateUrl normally.
+        // Use a native query to be compatible with jqLite when jQuery is not present
+        var view = angular.element(document.querySelector('#ui-view'));
+        var tmplUrl = view.attr('data-tmpl-url') || (view.data && view.data('tmpl-url'));
+        var initialHtml = (view && view.html && view.html()) || '';
+        if (tmplUrl && typeof initialHtml === 'string' && initialHtml.trim().length > 0) {
+            $templateCache.put(tmplUrl, initialHtml);
+        }
 
         // Allows to retrieve UI Router state information from inside templates
         $rootScope.$state = $state;
