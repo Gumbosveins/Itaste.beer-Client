@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iTaste.beer</title>
+  <base href="/" />
+
+  <!-- Styles -->
+  <link rel="icon" type="image/png" href="/Images/icons/1480800465_beer.png" />
+  <!-- Optional but recommended: Material baseline fonts/icons -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="/content/angular-material.min.css" />
+  <link rel="stylesheet" href="/content/angular-material.layouts.min.css" />
+  <link rel="stylesheet" href="/content/angular-material.layout-attributes.min.css" />
+  <link rel="stylesheet" href="/content/toastr.min.css" />
+  <link rel="stylesheet" href="/content/app.min.css" />
+
+  <!-- Ensure the shell and first view fill the viewport so backgrounds cover the full screen -->
+  <style>
+    html, body, #ui-view { min-height: 100vh; height: auto; }
+    /* Many templates use .indexPage as the top wrapper */
+    .indexPage { min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="ui-view" ui-view data-tmpl-url="/views/index"></div>
+
+  <!-- Vendor scripts: order matters -->
+  <script src="/Scripts/vendor/underscore-min.js"></script>
+  <!-- Use the jQuery version that exists in the repo -->
+  <script src="/Scripts/vendor/jquery-2.0.3.min.js"></script>
+  <!-- Legacy vendor dependencies expected by controllers/services -->
+  <script src="/Scripts/signalr.min.js"></script>
+  <!-- Angular core (load exactly once) -->
+  <script src="/Scripts/angular/angular.js"></script>
+  <script src="/Scripts/angular-animate/angular-animate.js"></script>
+  <script src="/Scripts/angular-aria/angular-aria.js"></script>
+  <script src="/Scripts/angular-material/angular-material.js"></script>
+  <script src="/Scripts/angular/angular-drag-and-drop-lists.min.js"></script>
+  <script src="/Scripts/vendor/ui-bootstrap.min.js"></script>
+  <script src="/Scripts/vendor/ui-bootstrap-tpls.min.js"></script>
+  <script src="/Scripts/vendor/angular-ui-router.js"></script>
+  <script src="/Scripts/vendor/jquery.marquee.js"></script>
+  <script src="/Scripts/toastr.min.js"></script>
+  <script src="/Scripts/vendor/math.min.js"></script>
+
+  <!-- Dev-only GA stub: prevent errors if classic GA (analytics.js) is not loaded -->
+  <script>
+    if (!window.ga) {
+      window.ga = function () { /* no-op in dev */ };
+    }
+  </script>
+
+  <!-- App scripts -->
+  <script src="/Scripts/filters.js"></script>
+  <script src="/Scripts/services.js"></script>
+  <script src="/Scripts/directives.js"></script>
+  <script src="/Scripts/controllers.js"></script>
+  <!-- Razor shim to clean server-side tokens in static .cshtml templates -->
+  <script src="/razor-shim.js"></script>
+  <script src="/Scripts/app.js"></script>
+</body>
+</html>
