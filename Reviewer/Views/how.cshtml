@@ -1,141 +1,90 @@
 ﻿@{
-    PageData["title"] = "AngularJS SPA Template for Visual Studio";
+    PageData["title"] = "How it works";
 }
 
-    <div class="indexPage col-lg-12 center">
-        <md-toolbar class="md-hue-2">
-            <div class="md-toolbar-tools">
-                <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                    <a href="/"><img src="~/Images/icons/home-2-24.png" /></a>
-                </md-button>
-            </div>
-        </md-toolbar>
-        <div class="mainLogo">
-            <img src="~/Images/logo.png" />
-        </div>
+<div class="app-hero">
+  <header class="app-toolbar">
+    <a class="brand" href="/">
+      <img src="/Images/icons/1480800465_beer.png" alt="iTaste.beer" />
+      <span>iTaste.beer</span>
+    </a>
+    <span style="flex:1"></span>
+    <a class="btn btn-ghost" ui-sref="home">Home</a>
+  </header>
 
-        <div class="howItWorks">
-            <h1>Create a room</h1>
-            <div>
-                <p>You can create two types or rooms, a regular tasting room and blind tasting room.</p>
-                <p>The creation of the rooms are almost the same</p>
-                <p>To create a regular room go into "Create room", select room name, and pin.</p>
-                <p>Additionally in a blind tasting room you need to pick a reveal code, don't forget this code!</p>
+  <main class="hero-inner">
+    <div class="hero-card">
+      <div class="hero-logo"><img src="/Images/logo.png" alt="iTaste.beer" /></div>
+      <h1 class="hero-title">How it works</h1>
+      <p class="hero-sub">A quick guide to creating rooms, running tastings, and reading results.</p>
 
-                <div class="md-padding">
-                    <h3>Select Beers</h3>
-                    <p>
+      <div class="grid">
+        <section class="card">
+          <h3>Create a room</h3>
+          <p>You can create two types of rooms: regular and blind tasting. The creation flow is nearly the same.</p>
+          <div class="md-padding">
+            <h4>Select Beers</h4>
+            <p>Select the beers to taste (they’ll be reviewed in the order you pick them).</p>
+            <div><img src="/Images/How/selectBeers.PNG" class="img-responsive img-center" alt="Select beers" /></div>
+          </div>
+          <div class="md-padding">
+            <h4>Select Categories</h4>
+            <p>Choose how to review beers. You can set weights per category (e.g., Taste 50%, Smell 10%).</p>
+            <div class="center"><img src="/Images/How/category.PNG" class="img-responsive img-center" alt="Categories" /></div>
+          </div>
+          <div class="md-padding">
+            <h4>Finish Room Creation</h4>
+            <p>Click the orange button to finish creating the room.</p>
+            <div><img src="/Images/How/finish.PNG" class="img-responsive img-center" alt="Finish" /></div>
+          </div>
+        </section>
 
-                        Select beers for the tasting (will be tasted in the order you select them)
-                    </p>
-                    <div>
-                        <img src="~/Images/How/selectBeers.PNG" class="img-responsive img-center" />
-                    </div>
-                </div>
-                <div class="md-padding">
-                    <h3>Select Categories</h3>
-                    <p>
-                        Next you select how you want the beers to be reviewed.
-                        You can set your desired weight on each review category. You can set taste to weigh 50% while smell only weighs 10% for example.
-                    </p>
-                    <div class="center">
-                        <img src="~/Images/How/category.PNG" class="img-responsive img-center" />
-                    </div>
-                </div>
-                <div class="md-padding">
-                    <h3>Finish Room Creation</h3>
-                    <p>
-                        Finish Creating the room. <br />
-                        Just click the orange button!
-                    </p>
-                    <div>
-                        <img src="~/Images/How/finish.PNG" class="img-responsive img-center" />
-                    </div>
-                </div>
-            </div>
-        </div>
+        <section class="card">
+          <h3>The Dashboard</h3>
+          <p>Put the dashboard on a TV or share your screen if remote.</p>
+          <div class="md-padding">
+            <h4>Left Panel</h4>
+            <p>Lists all beers. Voting is locked until the host opens a beer. When finished, click “Review finished”.</p>
+            <h4>Middle Panel</h4>
+            <p>Shows user reviews for the selected beer.</p>
+            <h4>Right Panel</h4>
+            <p>Shows the leaderboard with averages and weighted averages.</p>
+            <div><img src="/Images/How/dash.PNG" class="img-responsive img-center how-large" alt="Dashboard" /></div>
+            <h4>Blind Tasting</h4>
+            <p>Use the eye icon to reveal beers with the reveal code.</p>
+            <div><img src="/Images/How/blind.PNG" class="img-responsive img-center" alt="Blind" /></div>
+          </div>
+        </section>
+      </div>
 
-        <div class="howItWorks">
-            <h1>The Dashboard</h1>
-            <div>
-                <p>I recommend having the dashboard on a TV in the tasting party or in shared screen by the host if the tasting is remote</p>
+      <div class="sp-24"></div>
 
-                <div class="md-padding">
-                    <h3>Left Panel</h3>
-                    <p>
-                        On the left are all the beers that will be tasted. Voting on beers is locked until the host clicks a beer in the left panel to open it for review. <br />
-                        The beer will automatically open in each of the tasters phones. <br />
-                        When everyone has voted then the host needs to press the "Review finished" button to lock the beer for further voting.
-                    </p>
-                    <h3>Middle Panel</h3>
-                    <p>
-                        User reviews are shown in the middle for currently selected beer. <br />
-                    </p>
-                    <h3>Right Panel</h3>
-                    <p>
-                        Beer leaderboard with average scores and weighted average. <br />
-                    </p>
-                    <div>
-                        <img src="~/Images/How/dash.PNG" class="img-responsive img-center" />
-                    </div>
-
-                    <h3>Blind Tasting</h3>
-                    <p>
-                        If the room is a blind tasting room it will look like this. <br />
-                        The host can reveal the beers by pressing the eye in the right corner and type in the reveal code.
-                    </p>
-                    <div>
-                        <img src="~/Images/How/blind.PNG" class="img-responsive img-center" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="howItWorks">
-            <h1>Taster View</h1>
-            <div>
-                <p>To join the room, select Join Room and type in the room code, pin code and your username</p>
-
-                <div class="md-padding">
-                    <h3>Voting</h3>
-                    <p>
-                        When the host opens a beer for voting the beer will open automatically on your device and you can give your review. <br />
-                        You can add a comment to your vote and in blind tasting you can guess what beer you are tasting.
-                    </p>
-                    <div>
-                        <img src="~/Images/How/userroom.PNG" class="img-responsive img-center" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="howItWorks">
-            <h1>Other Information</h1>
-            <div>
-                <div class="md-padding">
-                    <h3>Who Made It</h3>
-                    <p>
-                        This page is made by one man, me Gumbo and I'm obviously not a front end developer :P <br />
-                        I made this page because I hate in every beer tasting you need to wait for at least an hour while the host adds all the results to excel to get the results. <br />
-                    </p>
-                </div>
-                <div class="md-padding">
-                    <h3>Contact Me</h3>
-                    <p>
-                        If you find any bugs, have any comments or feature requests then don't hesitate to contact me here: gumbosveins@@gmail.com
-                    </p>
-                </div>
-                <div class="md-padding">
-                    <h3>Donate</h3>
-                    <p>
-                        If my site made your tasting a little bit better then consider donating. I carry all the cost of hosting and maintenance this site.
-                    </p>
-                    <form action="https://www.paypal.com/donate" method="post" target="_top">
-                        <input type="hidden" name="hosted_button_id" value="2LEJX3PPL3A26" />
-                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                        <img alt="" border="0" src="https://www.paypal.com/en_IS/i/scr/pixel.gif" width="1" height="1" />
-                    </form>
-                </div>
-            </div>
-        </div>
+      <div class="grid">
+        <section class="card">
+          <h3>Taster View</h3>
+          <p>Join a room by code and PIN, enter your username, and vote when the host opens a beer.</p>
+          <div class="md-padding">
+            <h4>Voting</h4>
+            <p>Add comments and, in blind tastings, guess the beer.</p>
+            <div><img src="/Images/How/userroom.PNG" class="img-responsive img-center" alt="Taster" /></div>
+          </div>
+        </section>
+      </div>
     </div>
+      <div class="sp-24"></div>
+      <!-- Donation moved to bottom for consistency -->
+      <section class="card donate span-2">
+        <h3>Support iTaste.beer</h3>
+        <p>If this helps your tastings, consider a small donation to help with hosting and maintenance.</p>
+        <form action="https://www.paypal.com/donate" method="post" target="_top">
+          <input type="hidden" name="hosted_button_id" value="2LEJX3PPL3A26" />
+          <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+          <img alt="" border="0" src="https://www.paypal.com/en_IS/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+      </section>
+  </main>
+
+  <footer style="text-align:center; padding:12px; color:var(--muted)">
+    © {{ year }} iTaste.beer
+  </footer>
+</div>

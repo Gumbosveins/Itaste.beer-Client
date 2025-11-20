@@ -1,6 +1,9 @@
 ﻿'use strict';
-var serviceUrl = "http://localhost:5082/"
-//var serviceUrl = "https://itbapi-ftcrdaaucpb5gme4.canadacentral-01.azurewebsites.net/"
+// Route all API calls through the ASP.NET Core dev reverse proxy at /api/* to avoid CORS/mixed-content issues
+// Configure the upstream target via DEV_API_BASE env var (defaults to http://localhost:5082)
+// var serviceUrl = "/api/"
+// If you want to bypass the proxy, you can set this to your API directly:
+var serviceUrl = "https://itastebeer-api-b4gnbbftepcnchga.northeurope-01.azurewebsites.net/"
 // Declares how the application should be bootstrapped. See: http://docs.angularjs.org/guide/module
 angular.module('app', ['ngMaterial', 'ui.router', 'razorShim', 'app.filters', 'app.services', 'app.directives', 'app.controllers'])
 
@@ -86,6 +89,9 @@ angular.module('app', ['ngMaterial', 'ui.router', 'razorShim', 'app.filters', 'a
         // Allows to retrieve UI Router state information from inside templates
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+
+        // Expose year for templates (avoid Angular parsing of `new Date()` in expressions)
+        $rootScope.year = (new Date()).getFullYear();
 
         $rootScope.$on('$stateChangeSuccess', function (event, toState) {
 

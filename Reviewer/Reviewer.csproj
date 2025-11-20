@@ -152,6 +152,7 @@
       <DependentUpon>app.less</DependentUpon>
     </Content>
     <Content Include="Content\app.less" />
+    <Content Include="content\modern.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="Content\variables.less" />
     <Content Include="Global.asax" />

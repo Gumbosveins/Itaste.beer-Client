@@ -1,15 +1,15 @@
 ﻿<div class="userScreen" style="overflow-x: hidden;">
     <md-progress-linear md-mode="indeterminate" ng-if="initalLoad"></md-progress-linear>
-    <md-toolbar class="md-hue-2">
+    <md-toolbar class="md-toolbar-modern">
         <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                <a href="/"><img style="" src="~/Images/icons/home-2-24.png" /></a>
+            <md-button class="md-icon-button" aria-label="Home" ng-disabled="false">
+                <a href="/"><img class="home" src="/Images/icons/home-2-24.png" /></a>
             </md-button>
             <span flex></span>
             {{data.name}}
             <span flex></span>
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                <a href="/"><img style="margin-left: 5px;" src="~/Images/icons/power-24.png" /></a>
+            <md-button class="md-icon-button" aria-label="Logout" ng-disabled="false">
+                <a href="/"><img style="margin-left: 5px;" src="/Images/icons/power-24.png" /></a>
             </md-button>
         </div>
     </md-toolbar>

@@ -1,39 +1,53 @@
 ﻿<div class="indexPage join">
-    <md-progress-linear md-mode="indeterminate" ng-if="loading"></md-progress-linear>
-    <md-toolbar class="md-hue-2">
-        <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                <a href="/"><img style="margin-left: 5px;" src="~/Images/icons/home-2-24.png" /></a>
-            </md-button>
-            <span flex></span>
-            Create Room
-            <span flex></span>
+  <md-progress-linear md-mode="indeterminate" ng-if="loading"></md-progress-linear>
 
-        </div>
-    </md-toolbar>
-    <div class="mainLogo">
-        <img src="~/Images/logo.png" />
+  <md-toolbar class="md-toolbar-modern">
+    <div class="md-toolbar-tools">
+      <a href="/" aria-label="Home"><img class="home" src="/Images/icons/home-2-24.png" alt="Home" /></a>
+      <span flex></span>
+      <strong>Create Room</strong>
+      <span flex></span>
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            <div class="col-xs-offset-1 col-xs-10 col-lg-10 cener whiteBackground">
-                <md-input-container class="md-block">
-                    <input ng-model="room.roomName" type="text" placeholder="Room Name" ng-required="true">
-                </md-input-container>
-                <md-input-container class="md-block">
-                    <input ng-model="room.pin" type="text" placeholder="Room Pin (4 digits! ONLY NUMBERS!) " ng-required="true">
-                </md-input-container>
-                Blind Tasting <input style="margin-bottom:4px;" ng-model="room.blind" type="checkbox" placeholder="Blind Tasting" class="checkbox-inline">
-                <md-input-container class="md-block" ng-if="room.blind">
-                    <input ng-model="room.revealCode" type="text" placeholder="Blind Reveal Code. Don't for get this code!" ng-required="room.blind">
-                </md-input-container>
+  </md-toolbar>
 
-            </div>
+  <div class="hero-inner">
+    <div class="form-wrap">
+      <div class="hero-logo"><img src="/Images/logo.png" alt="Logo" /></div>
+      <h2 class="section-title">Create a room</h2>
+      <p class="section-sub">Pick a name, a 4‑digit PIN and optionally enable blind tasting with a reveal code.</p>
+
+      <form class="form" name="createForm" ng-submit="CreateRoom()" novalidate>
+        <div class="row">
+          <md-input-container class="md-block" md-no-float>
+            <label>Room Name</label>
+            <input ng-model="room.roomName" type="text" placeholder="e.g. Friday Tasting" required autocomplete="off" />
+            <div class="md-caption" ng-if="createForm.$submitted && !room.roomName">Please enter a room name.</div>
+          </md-input-container>
+
+          <md-input-container class="md-block" md-no-float>
+            <label>Room PIN (4 digits)</label>
+            <input ng-model="room.pin" type="text" inputmode="numeric" pattern="\d{4}" ng-pattern="/^\d{4}$/" maxlength="4" required placeholder="1234" autocomplete="one-time-code" />
+            <div class="md-caption" ng-if="createForm.$submitted && (!room.pin || !/^\d{4}$/.test(room.pin))">Enter a 4‑digit PIN.</div>
+          </md-input-container>
         </div>
 
-
-        <div class="col-xs-offset-1 col-xs-10 col-lg-10 center" ng-if="!loading">
-            <md-button type="submit" class="md-raised md-primary createButton" ng-click="CreateRoom()">Create Room</md-button>
+        <div class="row">
+          <div>
+            <label style="display:flex; align-items:center; gap:10px; color:var(--text)">
+              <input type="checkbox" ng-model="room.blind" />
+              Blind tasting (requires reveal code)
+            </label>
+          </div>
+          <md-input-container class="md-block" md-no-float ng-if="room.blind">
+            <label>Blind Reveal Code</label>
+            <input ng-model="room.revealCode" type="text" placeholder="Keep this safe" required autocomplete="off" />
+          </md-input-container>
         </div>
+
+        <div class="center" ng-if="!loading">
+          <md-button type="submit" class="md-raised md-primary">Create Room</md-button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>

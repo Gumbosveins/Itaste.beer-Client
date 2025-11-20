@@ -1,6 +1,6 @@
-﻿<div class="row indexPage gray">
+﻿<div class="row indexPage gray room-setup" ng-init="selectedTab = 0">
     <md-progress-linear md-mode="indeterminate" ng-if="loading"></md-progress-linear>
-    <md-toolbar class="md-hue-2">
+    <md-toolbar class="md-toolbar-modern">
         <div class="md-toolbar-tools">
             <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
                 <a href="/"><img style="margin-left: 5px;" src="~/Images/icons/home-2-24.png" /></a>
@@ -12,7 +12,18 @@
     </md-toolbar>
     <div ng-cloak>
         <md-content>
-            <md-tabs md-dynamic-height md-border-bottom>
+            <!-- Prominent call-to-actions for better discoverability -->
+            <div class="cta-intro">
+                <h3>Finish setting up your room</h3>
+                <p class="hint">Pick your beers, choose how you want to rate them, then finish setup.</p>
+                <div class="cta-group">
+                    <md-button class="md-raised createButton" ng-click="selectedTab = 0">Pick Your Beers</md-button>
+                    <md-button class="md-raised bluebutton" ng-click="selectedTab = 1">Pick Rating Categories</md-button>
+                    <md-button class="md-raised md-primary createButton" ng-click="selectedTab = 2">Finish</md-button>
+                </div>
+            </div>
+
+            <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
                 <md-tab label="Pick Your Beers">
                     <md-content class="md-padding">
                         <div class="row">
@@ -376,7 +387,7 @@
 
 
 @*<div class="noPadding">
-    <md-toolbar layout="row" class="md-hue-3">
+    <md-toolbar layout="row" class="md-toolbar-modern">
         <div class="md-toolbar-tools center">
             <div>{{data.name}}</div>
         </div>

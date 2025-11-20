@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Net.Http;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,6 +130,10 @@ app.Use(async (context, next) =>
 
         if (physical != null)
         {
+            // Disable caching for template files to ensure updated partials are fetched
+            context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            context.Response.Headers["Pragma"] = "no-cache";
+            context.Response.Headers["Expires"] = "0";
             context.Response.ContentType = "text/html; charset=utf-8";
             await context.Response.SendFileAsync(physical);
             return;
@@ -142,6 +148,69 @@ app.MapGet("/", async context =>
     var indexPath = Path.Combine(app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot"), "index.html");
     context.Response.ContentType = "text/html; charset=utf-8";
     await context.Response.SendFileAsync(indexPath);
+});
+
+// --- Simple dev reverse proxy for the legacy API ---
+// This lets the front-end call /api/* on the same origin, avoiding browser CORS/mixed-content issues.
+// Target defaults to http://localhost:5082 but can be overridden with env var DEV_API_BASE.
+var apiBase = Environment.GetEnvironmentVariable("DEV_API_BASE")?.TrimEnd('/')
+              ?? "http://localhost:5082";
+var httpClient = new HttpClient(new HttpClientHandler
+{
+    AllowAutoRedirect = false,
+    AutomaticDecompression = DecompressionMethods.All
+});
+
+app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/api"), apiApp =>
+{
+    apiApp.Run(async ctx =>
+    {
+        var upstream = new Uri(apiBase + ctx.Request.Path + ctx.Request.QueryString);
+
+        // Build upstream request
+        var method = new HttpMethod(ctx.Request.Method);
+        var upstreamRequest = new HttpRequestMessage(method, upstream);
+
+        // Copy headers (except Host)
+        foreach (var header in ctx.Request.Headers)
+        {
+            if (string.Equals(header.Key, "Host", StringComparison.OrdinalIgnoreCase)) continue;
+            if (!upstreamRequest.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()))
+            {
+                upstreamRequest.Content ??= new StreamContent(ctx.Request.Body);
+                upstreamRequest.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+            }
+        }
+
+        // Copy body if present
+        if (ctx.Request.ContentLength.HasValue && ctx.Request.ContentLength.Value > 0)
+        {
+            upstreamRequest.Content = new StreamContent(ctx.Request.Body);
+            // Try to pass through content-type
+            if (ctx.Request.ContentType != null)
+            {
+                upstreamRequest.Content.Headers.TryAddWithoutValidation("Content-Type", ctx.Request.ContentType);
+            }
+        }
+
+        // Send and relay response
+        using var upstreamResponse = await httpClient.SendAsync(upstreamRequest, HttpCompletionOption.ResponseHeadersRead, ctx.RequestAborted);
+        ctx.Response.StatusCode = (int)upstreamResponse.StatusCode;
+
+        // Copy response headers
+        foreach (var header in upstreamResponse.Headers)
+        {
+            ctx.Response.Headers[header.Key] = header.Value.ToArray();
+        }
+        foreach (var header in upstreamResponse.Content.Headers)
+        {
+            ctx.Response.Headers[header.Key] = header.Value.ToArray();
+        }
+        // Remove hop-by-hop headers that Kestrel forbids
+        ctx.Response.Headers.Remove("transfer-encoding");
+
+        await upstreamResponse.Content.CopyToAsync(ctx.Response.Body);
+    });
 });
 
 // SPA fallback to index.html for client-side routes

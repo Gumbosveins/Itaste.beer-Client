@@ -1,0 +1,304 @@
+:root {
+  --bg: #0f172a;          /* slate-900 */
+  --bg-elev: #111827;     /* slate-800 */
+  --surface: #0b1220;     /* deep near-black */
+  --text: #e5e7eb;        /* slate-200 */
+  --muted: #9ca3af;       /* slate-400 */
+  --primary: #f59e0b;     /* amber-500 */
+  --primary-600: #d97706; /* darker amber */
+  --secondary: #22c55e;   /* green-500 */
+  --danger: #ef4444;      /* red-500 */
+  --radius: 14px;
+  --ring: 2px;
+  --ring-color: rgba(245, 158, 11, 0.45); /* amber */
+}
+
+/* Global baseline */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); }
+body { margin: 0; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; height: auto; }
+
+/* Shell + hero */
+.app-hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: radial-gradient(1200px 600px at 10% -10%, #1f2937 0%, transparent 60%),
+              radial-gradient(1000px 600px at 110% 10%, #111827 0%, transparent 55%),
+              var(--bg);
+  width: 100%;
+  overflow-x: hidden;
+}
+.app-toolbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 12px;
+  height: 56px; padding: 0 16px;
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: saturate(1.2) blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.app-toolbar .brand { display: flex; gap: 10px; align-items: center; font-weight: 700; letter-spacing: .3px; }
+.app-toolbar .brand img { width: 28px; height: 28px; }
+.app-toolbar a { color: var(--text); text-decoration: none; }
+
+/* Sub-headers and helper text */
+.section-title { font-weight: 800; margin: 8px 0 6px; }
+.section-sub { color: var(--muted); margin: 0 0 12px; }
+
+.hero-inner { display: grid; place-items: center; padding: 40px 16px; width: 100%; overflow-x: hidden; }
+.hero-card {
+  width: min(100%, 980px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: clamp(24px, 5vw, 48px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  margin: 0 auto;
+}
+.hero-logo { display: flex; justify-content: center; margin-bottom: 20px; }
+.hero-logo img { width: clamp(160px, 28vw, 360px); filter: drop-shadow(0 6px 18px rgba(0,0,0,.35)); }
+.hero-title { text-align: center; font-size: clamp(22px, 4vw, 36px); font-weight: 800; margin: 12px 0 4px; }
+.hero-sub { text-align: center; color: var(--muted); font-size: clamp(14px, 2.6vw, 18px); margin-bottom: 24px; }
+
+/* Buttons */
+.btn { appearance: none; border: 0; cursor: pointer; user-select: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 18px; border-radius: 12px;
+  font-weight: 800; letter-spacing: .2px; text-decoration: none;
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease; }
+.btn:focus { outline: none; box-shadow: 0 0 0 var(--ring) var(--ring-color); }
+.btn:active { transform: translateY(1px); }
+
+.btn-primary { background: var(--primary); color: #101010; }
+.btn-primary:hover { background: var(--primary-600); }
+.btn-secondary { background: #1f2937; color: var(--text); border: 1px solid rgba(255,255,255,0.08); }
+.btn-secondary:hover { background: #263241; }
+.btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.12); }
+.btn-ghost:hover { background: rgba(255,255,255,0.04); }
+
+/* Map Angular Material buttons to the same modern look */
+.md-button { 
+  appearance: none; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: var(--text);
+  border-radius: 12px; padding: 12px 16px; font-weight: 800; letter-spacing: .2px;
+  text-transform: none; box-shadow: none; min-height: 44px; line-height: 20px;
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+.md-button:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.18); }
+.md-button:focus { outline: none; box-shadow: 0 0 0 var(--ring) var(--ring-color); }
+.md-button:active { transform: translateY(1px); }
+
+/* Primary = amber solid */
+.md-button.md-primary, .md-button.btn-primary { background: var(--primary); color: #101010; border-color: var(--primary); }
+.md-button.md-primary:hover, .md-button.btn-primary:hover { background: var(--primary-600); border-color: var(--primary-600); }
+
+/* Warn = red */
+.md-button.md-warn { background: var(--danger); color: #fff; border-color: var(--danger); }
+.md-button.md-warn:hover { background: #dc2626; border-color: #dc2626; }
+
+/* Raised should not add heavy shadow; keep consistent */
+.md-button.md-raised { box-shadow: none; }
+
+/* Remove ripple artifacts to match clean style */
+.md-button .md-ripple-container { display: none !important; }
+
+.btn-group { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 720px) { .btn-group { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* Cards & layout */
+.card { background: var(--surface); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius);
+  padding: 18px; box-shadow: 0 12px 22px rgba(0,0,0,.25); }
+.card h3 { margin: 6px 0 6px; font-weight: 800; }
+.card p { color: var(--muted); }
+
+.panel-section { background: var(--surface); border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius); padding: 14px; margin-bottom: 16px; }
+
+.grid { display: grid; gap: 18px; grid-template-columns: 1fr; width: 100%; }
+@media (min-width: 900px) { .grid { grid-template-columns: 1.4fr .6fr; } }
+
+/* Allow a card to span full width of the grid when needed */
+.span-2 { grid-column: 1 / -1; }
+
+/* Forms */
+.form-wrap { width: min(560px, 100%); margin: 16px auto; padding: 16px; }
+.form { background: var(--surface); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 20px; }
+.form .row { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+/* Keep forms single-column on all sizes for clean alignment; switch back to two-column later if desired */
+/* @media (min-width: 900px) { .form .row { grid-template-columns: 1fr 1fr; } } */
+.form .row > * { min-width: 0; }
+
+/* Modernized AngularJS Material inputs (outlined look) */
+.form md-input-container { margin: 8px 0; display: block; width: 100%; }
+.form md-input-container label { color: var(--muted); font-weight: 600; letter-spacing: .2px; }
+.form md-input-container.md-input-focused label,
+.form md-input-container.md-input-has-value label { color: var(--primary) !important; }
+
+.form md-input-container .md-input {
+  color: var(--text);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 12px;
+  padding: 12px 14px;
+  height: 52px;
+  line-height: 20px;
+  caret-color: var(--primary);
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  width: 100%;
+}
+
+.form md-input-container .md-input::placeholder,
+.form md-input-container .md-placeholder { color: var(--muted); opacity: .9; }
+
+.form md-input-container.md-input-focused .md-input {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 var(--ring) var(--ring-color);
+  background: rgba(255,255,255,0.08);
+}
+
+/* Hide legacy underline style */
+.form md-input-container .md-input-underline,
+.form md-input-container .md-input-underline .md-input-ripple { display: none !important; height: 0 !important; }
+/* Remove Angular Material error spacer to keep consistent vertical alignment */
+.form md-input-container .md-errors-spacer { display: none !important; height: 0 !important; }
+
+/* Helper text */
+.form .md-caption { color: var(--muted); margin-top: 6px; font-size: 12px; }
+
+/* Utility: full-span element within a grid row */
+.form .full-span { grid-column: 1 / -1; }
+
+/* Error & hover states */
+.form md-input-container .md-input:hover { border-color: rgba(255,255,255,0.28); }
+.form md-input-container.md-input-invalid .md-input { border-color: var(--danger) !important; box-shadow: none; }
+.form md-input-container.md-input-invalid label { color: var(--danger) !important; }
+
+/* Autofill (Chrome) */
+.form md-input-container .md-input:-webkit-autofill,
+.form md-input-container .md-input:-webkit-autofill:hover,
+.form md-input-container .md-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px rgba(255,255,255,0.06) inset;
+}
+
+/* When using md-no-float, ensure label behaves like a normal block label */
+.form md-input-container[md-no-float] label { position: static !important; transform: none !important; font-size: 13px; margin-bottom: 6px; }
+
+md-progress-linear .md-container { background: rgba(255,255,255,0.08); }
+md-progress-linear .md-bar { background: var(--primary); }
+
+.md-toolbar-modern { background: rgba(17, 24, 39, 0.85) !important; color: var(--text) !important; }
+.md-toolbar-modern img.home { filter: drop-shadow(0 1px 0 rgba(0,0,0,.6)); }
+
+/* Donate block */
+.donate { text-align: left; padding: 18px; border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+  border: 1px solid rgba(245,158,11,0.15); }
+.donate { width: 100%; float: none; }
+.donate h3 { margin: 0 0 6px; font-weight: 800; }
+.donate p { margin: 4px 0 10px; color: var(--muted); }
+
+/* Bottom donation wrapper centers donation card to content width */
+.donation-bottom { width: min(100%, 980px); margin: 0 auto; display: block; clear: both; }
+
+/* How page large image (dashboard preview) */
+.how-large { width: min(100%, 1100px); display: block; margin: 8px auto; border-radius: 8px; }
+
+/* Utilities */
+.center { text-align: center; }
+.sp-16 { height: 16px; }
+.sp-24 { height: 24px; }
+
+/* Neutralize legacy page skins when present in partial templates */
+.indexPage { background: transparent !important; height: auto !important; }
+.indexPage.join { background: transparent !important; }
+.indexPage.gray { background: transparent !important; }
+md-content { background-color: transparent !important; }
+
+/* TV Dashboard & Room Dashboard visual separation */
+.userScreen, .userScreen.tv { overflow-x: hidden; }
+.tv .dashboardContainer { 
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.28);
+}
+.tv .dashboardContainer.scrollY { overflow-y: auto; overflow-x: hidden; }
+.tv .dashboardContainer .userBeerRow,
+.tv .dashboardContainer .beerinfo,
+.tv .dashboardContainer .reviewsRow { border-bottom: 1px solid rgba(255,255,255,.06); }
+
+/* Subtle column dividers */
+.tv .dashboardContainer.dashboard { position: relative; }
+.tv .dashboardContainer.dashboard::after { content: ""; position: absolute; top: 0; right: -8px; width: 1px; height: 100%; background: rgba(255,255,255,.14); }
+.tv .dashboardContainer.dashboard.current::after { display: none; }
+
+/* Prevent oversized images/text causing horizontal scroll */
+.tv img { max-width: 100%; height: auto; }
+.tv .table { width: 100%; table-layout: fixed; }
+.tv .table th, .tv .table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Room Dashboard tweaks */
+.md-toolbar-modern { background: rgba(17, 24, 39, 0.85) !important; color: var(--text) !important; }
+.room-setup .section-title { margin-top: 0; }
+.room-setup .hint { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+
+/* --- Room Setup enhancements (Create flow) --- */
+/* Make the legacy CTA buttons more prominent and consistent with modern buttons */
+.room-setup .md-button.evenButton,
+.room-setup .md-button.createButton,
+.room-setup .md-button.bluebutton {
+  min-width: 220px;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 12px;
+}
+.room-setup .md-button.createButton { background: var(--primary); color: #101010; border: 1px solid var(--primary); }
+.room-setup .md-button.createButton:hover { background: var(--primary-600); border-color: var(--primary-600); }
+.room-setup .md-button.bluebutton { background: #1f2937; color: var(--text); border: 1px solid rgba(255,255,255,0.16); }
+.room-setup .md-button.bluebutton:hover { background: #263241; }
+
+/* Arrange the three main CTAs in a clear row on desktop, single column on mobile */
+.room-setup .cta-group { display: grid; gap: 12px; grid-template-columns: 1fr; margin: 12px 0 18px; }
+@media (min-width: 900px) {
+  .room-setup .cta-group { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Improve visibility of picking sections and lists */
+.room-setup .picking .panel-section,
+.room-setup .picking .card,
+.room-setup .picking .whiteBackground,
+.room-setup .picking .dashboardContainer {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 14px rgba(0,0,0,.18);
+}
+.room-setup md-content.md-no-momentum { background: rgba(255,255,255,0.04) !important; box-shadow: 0 6px 14px rgba(0,0,0,.22) !important; border: 1px solid rgba(255,255,255,0.10) !important; }
+.room-setup .whiteBackground { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.10) !important; border-radius: 12px !important; }
+.room-setup .picking .row { margin-left: 0; margin-right: 0; }
+
+/* Beer/candidate tiles and list items get subtle separators */
+.room-setup .beerRow,
+.room-setup .userBeerRow,
+.room-setup .beerinfo,
+.room-setup .reviewRow { 
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.room-setup .beerRow:hover,
+.room-setup .userBeerRow:hover { background: rgba(255,255,255,0.06); }
+
+/* Make Material tabs more discoverable */
+.room-setup md-tabs md-tab-item { font-weight: 700; letter-spacing: .2px; }
+.room-setup md-tabs md-ink-bar { background: var(--primary) !important; height: 3px; }
+
+/* Narrower max width for the main setup container */
+.room-setup [layout], .room-setup .col-lg-12 { max-width: 980px; margin-left: auto; margin-right: auto; }
+
+/* CTA intro card for room setup */
+.room-setup .cta-intro { background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.10); border-radius: 14px; padding: 18px; margin: 12px auto 18px; }
+.room-setup .cta-intro h3 { margin: 0 0 6px; font-weight: 800; }
+.room-setup .cta-intro p { margin: 0 0 8px; color: var(--muted); }
