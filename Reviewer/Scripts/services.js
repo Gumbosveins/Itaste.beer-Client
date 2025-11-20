@@ -310,7 +310,7 @@ angular.module('app.services', [])
 }])
 
 
-    .value('signalRServer', "https://itbapi.azurewebsites.net")
+    .value('signalRServer', "https://itastebeer-api-b4gnbbftepcnchga.northeurope-01.azurewebsites.net")
 ////.value('signalRServer', "https://localhost:7283")
 
     .factory('signalRHubProxy', ['$rootScope', 'signalRServer',
