@@ -5,4 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
+  
+  <!-- Include legacy static assets from the sibling Reviewer folder in publish output -->
+  <ItemGroup>
+    <!-- Copy everything under ../Reviewer to the publish directory under a top-level 'Reviewer' folder -->
+    <Content Include="..\Reviewer\**\*.*">
+      <!-- Place inside 'Reviewer/...' in the output to keep folder structure predictable -->
+      <Link>Reviewer\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
