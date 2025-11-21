@@ -18,9 +18,12 @@ builder.Services.AddResponseCompression(options =>
 
 var app = builder.Build();
 
-// Compute repository root and legacy project path early (used by several middlewares)
-var repoRoot = Directory.GetParent(app.Environment.ContentRootPath)!.FullName;
-string legacyRoot = Path.Combine(repoRoot, "Reviewer");
+// Compute legacy assets root: prefer published ContentRoot/Reviewer (in Azure),
+// fallback to repo sibling folder ../Reviewer for local development.
+var contentReviewer = Path.Combine(app.Environment.ContentRootPath, "Reviewer");
+string legacyRoot = Directory.Exists(contentReviewer)
+    ? contentReviewer
+    : Path.Combine(Directory.GetParent(app.Environment.ContentRootPath)!.FullName, "Reviewer");
 
 if (!app.Environment.IsDevelopment())
 {
