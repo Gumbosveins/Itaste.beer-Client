@@ -4,6 +4,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- We do not use Razor pages in this project; legacy .cshtml are served as static files. Disable Razor compilation to avoid IDE/analyzer errors. -->
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
   </PropertyGroup>
   
   <!-- Include legacy static assets from the sibling Reviewer folder in publish output -->
@@ -12,6 +15,16 @@
     <Content Include="..\Reviewer\**\*.*">
       <!-- Place inside 'Reviewer/...' in the output to keep folder structure predictable -->
       <Link>Reviewer\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Ensure Razor SDK does not try to generate code for linked legacy .cshtml files -->
+  <ItemGroup>
+    <RazorGenerate Remove="Reviewer/**/*.cshtml" />
+    <!-- Keep them as Content so they are published -->
+    <Content Update="Reviewer/**/*.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
