@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { IconButton, Logo, Spinner, TopBar } from '../components/ui'
 import { EyeIcon, EyeOffIcon, PowerIcon } from '../components/icons'
-import { BeerList, Leaderboard, ResultReveal, ReviewTable, UserList, type RevealState } from '../components/DashboardPanels'
+import { BeerList, CurrentBeer, Leaderboard, ResultReveal, UserList, type RevealState } from '../components/DashboardPanels'
+import { DonateButton } from '../components/DonateButton'
 import { api, errorMessage } from '../lib/api'
 import { useBeerHub } from '../lib/hub'
 import { clearSession } from '../lib/session'
@@ -209,12 +210,21 @@ export default function Dashboard() {
   const current = useMemo(() => data?.beverages.find((b) => b.beverageId === currentId) ?? null, [data, currentId])
   const allReviews = useMemo(() => data?.beverages.flatMap((b) => b.reviews) ?? [], [data])
 
+  const currentIndex = data && current ? data.beverages.indexOf(current) + 1 : 0
+
   return (
-    <div className="flex h-screen flex-col bg-neutral-100">
+    <div className="flex h-screen flex-col bg-foam">
       <TopBar
-        title={data && <span>{data.name} <span className="ml-3 rounded bg-white/20 px-3 py-0.5 font-mono text-lg tracking-[0.3em]">{data.code}</span></span>}
+        title={data?.name}
         right={
           <>
+            {data && (
+              <span className="mr-2 hidden items-center gap-3 md:flex">
+                <span className="text-sm text-white/85">Join at <b className="text-white">itaste.beer</b> with</span>
+                <span className="rounded-[10px] bg-white pl-4 pr-2 pt-0.5 font-display text-[34px] leading-tight tracking-[0.25em] text-pink">{data.code}</span>
+              </span>
+            )}
+            <span className="hidden lg:block"><DonateButton /></span>
             {data?.isBlind && (
               <IconButton label={hidden ? 'Reveal beers' : 'Hide beers'} onClick={toggleHidden}>{hidden ? <EyeIcon /> : <EyeOffIcon />}</IconButton>
             )}
@@ -229,13 +239,23 @@ export default function Dashboard() {
         </div>
       )}
       {data && (
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-y-auto p-3 lg:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,3fr)] lg:overflow-hidden">
-          <BeerList data={data} hidden={hidden} currentId={currentId} busyId={busyId} onOpen={(b) => void openBeer(b)} onFinish={(b) => void finishReview(b)} />
-          <section className="min-h-0 overflow-y-auto rounded-2xl bg-white shadow">
+        <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-y-auto px-5 pb-5 pt-4 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)_minmax(0,340px)] lg:overflow-hidden">
+          <BeerList data={data} hidden={hidden} currentId={currentId} busyId={reveal ? null : busyId} onOpen={(b) => void openBeer(b)} />
+          <section className="panel min-h-0 overflow-y-auto">
             {reveal ? (
               <ResultReveal reveal={reveal} hidden={hidden} />
             ) : current ? (
-              <ReviewTable beverage={current} reviewTypes={data.reviewTypes} allReviews={allReviews} flashes={flashes} />
+              <CurrentBeer
+                beverage={current}
+                index={currentIndex}
+                total={data.beverages.length}
+                hidden={hidden}
+                busy={busyId === current.beverageId}
+                reviewTypes={data.reviewTypes}
+                allReviews={allReviews}
+                flashes={flashes}
+                onFinish={() => void finishReview(current)}
+              />
             ) : (
               <UserList users={data.users} roomCode={data.code} onDelete={(id, name) => void deleteUser(id, name)} />
             )}
