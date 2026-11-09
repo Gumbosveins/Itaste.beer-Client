@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pink: #ff4081;
+  --color-pink-dark: #e91e63;
+  --color-amber: #ff9800;
+  --color-ink: #1f1a17;
+  --color-foam: #fffaf2;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bebas Neue", "Inter", ui-sans-serif, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+  body {
+    @apply bg-foam text-ink antialiased;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  animation: reveal 900ms ease-out forwards;
+}
+
+@keyframes pulseHeart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.pulse {
+  animation: pulseHeart 1.2s ease-in-out infinite;
+}
