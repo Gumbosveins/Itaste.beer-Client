@@ -7,8 +7,8 @@ const VARIANTS: Record<Variant, string> = {
   pink: 'bg-pink text-white hover:bg-pink-dark',
   amber: 'bg-amber text-white hover:brightness-95',
   dark: 'bg-ink text-white hover:bg-black',
-  green: 'bg-emerald-600 text-white hover:bg-emerald-700',
-  ghost: 'bg-white/80 text-ink ring-1 ring-black/10 hover:bg-white',
+  green: 'bg-[#0f9d58] text-white shadow-[0_6px_16px_rgba(15,157,88,0.3)] hover:brightness-95',
+  ghost: 'bg-white text-ink ring-1 ring-black/10 hover:bg-foam',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -21,7 +21,7 @@ export function Button({ variant = 'pink', busy = false, className = '', childre
     <button
       {...rest}
       disabled={disabled || busy}
-      className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-[14px] px-5 py-3 text-sm font-semibold shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${VARIANTS[variant]} ${className}`}
     >
       {busy && <Spinner />}
       {children}
@@ -58,27 +58,32 @@ interface TopBarProps {
 
 export function TopBar({ title, right }: TopBarProps) {
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center gap-3 bg-pink px-4 text-white shadow-md">
-      <Link to="/" className="flex items-center gap-2 font-display text-2xl tracking-wide" aria-label="Home">
-        <img src="/favicon.png" alt="" className="h-7 w-7" />
-        <span className="hidden sm:inline">iTaste.beer</span>
+    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 bg-pink px-4 text-white sm:h-[72px] sm:px-7">
+      <Link to="/" className="font-display text-2xl tracking-wide sm:text-[28px]" aria-label="iTaste.beer home">
+        iTaste.beer
       </Link>
-      <div className="min-w-0 flex-1 truncate text-center font-semibold">{title}</div>
-      <div className="flex items-center gap-1">{right}</div>
+      {title && (
+        <>
+          <span className="hidden h-7 w-px bg-white/40 sm:block" aria-hidden />
+          <div className="min-w-0 flex-1 truncate font-semibold sm:text-lg">{title}</div>
+        </>
+      )}
+      {!title && <div className="flex-1" />}
+      <div className="flex items-center gap-2">{right}</div>
     </header>
   )
 }
 
 export function IconButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
   return (
-    <button type="button" onClick={onClick} aria-label={label} title={label} className="rounded-lg p-2 transition hover:bg-white/15">
+    <button type="button" onClick={onClick} aria-label={label} title={label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 transition hover:bg-white/25">
       {children}
     </button>
   )
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-2xl bg-white p-5 shadow-lg shadow-black/5 ring-1 ring-black/5 ${className}`}>{children}</div>
+  return <div className={`panel p-5 ${className}`}>{children}</div>
 }
 
 export function Logo({ className = 'w-64' }: { className?: string }) {
@@ -92,7 +97,7 @@ export function BeerImage({ src, hidden, className = 'h-14 w-14' }: { src: strin
 
 export const HIDDEN = '???????'
 
-export function FormPage({ title, color = 'bg-amber', children }: { title: string; color?: string; children: ReactNode }) {
+export function FormPage({ title, color = 'bg-pink', children }: { title: string; color?: string; children: ReactNode }) {
   return (
     <div className={`min-h-screen ${color}`}>
       <TopBar title={title} />

@@ -18,7 +18,7 @@ export default function OpenDashboard() {
   }
 
   return (
-    <FormPage title="Open Dashboard" color="bg-violet-600">
+    <FormPage title="Open Dashboard">
       <Card>
         <form onSubmit={submit} className="space-y-4">
           <Field
@@ -31,7 +31,7 @@ export default function OpenDashboard() {
             autoFocus
           />
           <Field label="Room pin" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))} inputMode="numeric" required />
-          <Button type="submit" variant="dark" className="w-full" disabled={!valid}>
+          <Button type="submit" className="w-full" disabled={!valid}>
             Open Dashboard
           </Button>
         </form>

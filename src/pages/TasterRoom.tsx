@@ -142,60 +142,76 @@ export default function TasterRoom() {
   }
 
   const reviewTypes = room ? [...room.reviewTypes].sort((a, b) => a.displayOrder - b.displayOrder) : []
+  const openBeer = room?.beverages.find((b) => b.beverageId === openId) ?? null
+  const openDraft = openBeer ? drafts[openBeer.beverageId] : undefined
 
   return (
-    <div className="min-h-screen bg-foam">
-      <TopBar title={room?.name ?? roomCode} right={<IconButton label="Leave room" onClick={leave}><PowerIcon /></IconButton>} />
+    <div className="flex min-h-screen flex-col bg-foam">
+      <TopBar
+        title={
+          <span className="block leading-tight">
+            <span className="block truncate">{room?.name ?? roomCode}</span>
+            <span className="block text-xs font-normal text-white/85">{session.username} · room {roomCode.toUpperCase()}</span>
+          </span>
+        }
+        right={<IconButton label="Leave room" onClick={leave}><PowerIcon /></IconButton>}
+      />
       {!room && <div className="flex justify-center pt-16 text-pink"><Spinner className="h-10 w-10" /></div>}
       {room && (
-        <main className="mx-auto max-w-xl space-y-3 px-3 pb-16 pt-4">
-          <p className="px-1 text-sm text-ink/60">Hi {session.username}. The host opens each beer for voting, it will pop open here.</p>
+        <main className={`mx-auto w-full max-w-xl flex-1 space-y-2.5 px-3 pt-3 ${openBeer ? 'pb-32' : 'pb-10'}`}>
+          {!liveId && <p className="px-1 py-2 text-sm text-muted">The host opens each beer for voting, it pops open here.</p>}
           {room.beverages.map((beer, i) => {
             const draft = drafts[beer.beverageId]
             const open = openId === beer.beverageId
             const live = liveId === beer.beverageId
             const blind = room.isBlind
+            const total = reviewTotal(draft?.values ?? {}, reviewTypes)
             return (
-              <article key={beer.beverageId} className={`overflow-hidden rounded-2xl bg-white shadow ring-1 transition ${live ? 'ring-2 ring-pink' : 'ring-black/5'}`}>
-                <button type="button" onClick={() => setOpenId(open ? null : beer.beverageId)} className="flex w-full items-center gap-3 p-4 text-left">
-                  <span className="relative">
-                    <BeerImage src={beer.imageUrlSm} hidden={blind} className={`h-14 w-14 ${live ? 'pulse' : ''}`} />
-                    <span className="absolute -left-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">{i + 1}</span>
-                  </span>
+              <article
+                key={beer.beverageId}
+                className={`overflow-hidden rounded-[20px] bg-white transition ${open ? 'shadow-[0_0_0_2px_var(--color-pink),0_10px_24px_rgba(255,64,129,0.15)]' : 'shadow-[0_1px_2px_rgba(0,0,0,0.04)]'}`}
+              >
+                <button type="button" onClick={() => setOpenId(open ? null : beer.beverageId)} className="flex w-full items-center gap-3 p-3 text-left" aria-expanded={open}>
+                  <BeerImage src={beer.imageUrlSm} hidden={blind} className={`shrink-0 ring-0 ${open ? 'h-[52px] w-[52px]' : 'h-9 w-9'} ${live ? 'pulse' : ''}`} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">{blind ? HIDDEN : beer.name}</span>
-                    <span className="block truncate text-sm text-ink/60">{blind ? HIDDEN : beer.manufacturer}</span>
-                    <span className="block text-xs text-ink/50">
-                      {blind ? HIDDEN : beer.typeName} · {beer.alcoholPercentage}% · IBU {beer.ibu > 0 ? beer.ibu : 'N/A'}
+                    {open && (
+                      <span className="block text-[11px] font-bold uppercase tracking-[0.12em] text-pink">
+                        {live ? 'Open now' : 'Your review'} · beer {i + 1} of {room.beverages.length}
+                      </span>
+                    )}
+                    <span className={`block truncate ${open ? 'font-display text-[28px] leading-none' : 'text-sm font-semibold'}`}>{blind ? HIDDEN : beer.name}</span>
+                    <span className="block truncate text-xs text-muted">
+                      {open
+                        ? `${blind ? HIDDEN : beer.manufacturer} · ${beer.alcoholPercentage}% · IBU ${beer.ibu > 0 ? beer.ibu : 'N/A'}`
+                        : draft?.reviewed
+                          ? `You gave ${fmt(total)}`
+                          : live
+                            ? 'Open for voting'
+                            : 'Locked until the host opens it'}
                     </span>
                   </span>
-                  <span className="text-right">
-                    <span className="block text-xs text-ink/50">You</span>
-                    <span className={`block text-xl font-bold ${draft?.reviewed ? 'text-emerald-600' : 'text-ink/30'}`}>{fmt(reviewTotal(draft?.values ?? {}, reviewTypes))}</span>
-                    {draft && draft.finalScore >= 0 && (
-                      <span className="block text-xs font-semibold text-pink">Final {fmt(draft.finalScore)}</span>
-                    )}
-                  </span>
+                  {!open && <BeerChip live={live} reviewed={Boolean(draft?.reviewed)} finalScore={draft?.finalScore ?? -1} />}
                 </button>
 
                 {open && draft && (
-                  <div className="space-y-4 border-t border-black/5 bg-foam/60 p-4">
+                  <div className="space-y-3.5 px-4 pb-4">
                     {reviewTypes.map((t) => (
                       <div key={t.reviewId}>
-                        <div className="mb-1 flex justify-between text-sm">
-                          <span className="font-medium">{t.name}</span>
-                          <span className="text-ink/50">{t.maxValue}%</span>
+                        <div className="mb-1.5 flex justify-between text-sm">
+                          <span className="font-semibold">{t.name}</span>
+                          <span className="text-[#8a817a]">weighs {t.maxValue}%</span>
                         </div>
-                        <div className="grid grid-cols-11 gap-1">
+                        <div className="grid grid-cols-11 gap-[3px] rounded-xl bg-[#f1eeeb] p-[3px]" role="radiogroup" aria-label={t.name}>
                           {SCORES.map((n) => {
                             const active = (draft.values[t.reviewId] ?? 0) === n
                             return (
                               <button
                                 key={n}
                                 type="button"
+                                role="radio"
+                                aria-checked={active}
                                 onClick={() => patchDraft(beer.beverageId, { values: { ...draft.values, [t.reviewId]: n } })}
-                                className={`aspect-square rounded-lg text-sm font-semibold transition ${active ? 'bg-pink text-white shadow' : 'bg-white text-ink/70 ring-1 ring-black/10 hover:bg-pink/10'}`}
-                                aria-pressed={active}
+                                className={`h-[34px] rounded-[9px] text-[13px] font-bold transition ${active ? 'bg-pink text-white shadow-[0_2px_6px_rgba(255,64,129,0.35)]' : 'text-[#5a524c] hover:bg-white'}`}
                               >
                                 {n}
                               </button>
@@ -204,19 +220,15 @@ export default function TasterRoom() {
                         </div>
                       </div>
                     ))}
-                    <input
-                      value={draft.comment}
-                      onChange={(e) => patchDraft(beer.beverageId, { comment: e.target.value })}
-                      placeholder={blind ? 'Guess the beer' : 'Comment'}
-                      maxLength={300}
-                      className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none focus:border-pink"
-                    />
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-ink/60">Your score <b className="text-lg text-ink">{fmt(reviewTotal(draft.values, reviewTypes))}</b></span>
-                      <Button variant={draft.reviewed ? 'amber' : 'green'} busy={draft.saving} onClick={() => void submit(beer, reviewTypes)}>
-                        {draft.reviewed ? 'Update review' : 'Submit review'}
-                      </Button>
-                    </div>
+                    <label className="block text-[13px] font-semibold text-muted">
+                      {blind ? 'Guess the beer' : 'Comment'}
+                      <input
+                        value={draft.comment}
+                        onChange={(e) => patchDraft(beer.beverageId, { comment: e.target.value })}
+                        maxLength={300}
+                        className="mt-1.5 h-11 w-full rounded-xl border-[1.5px] border-[#e6e0db] px-3 text-[15px] font-normal text-ink outline-none focus:border-pink"
+                      />
+                    </label>
                   </div>
                 )}
               </article>
@@ -224,6 +236,38 @@ export default function TasterRoom() {
           })}
         </main>
       )}
+
+      {openBeer && openDraft && (
+        <div className="fixed inset-x-0 bottom-0 z-20 bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.06)]">
+          <div className="mx-auto flex max-w-xl items-center gap-3 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3">
+            <div>
+              <div className="text-xs text-[#8a817a]">Your score</div>
+              <div className="font-display text-4xl leading-none">{fmt(reviewTotal(openDraft.values, reviewTypes))}</div>
+            </div>
+            <Button
+              variant={openDraft.reviewed ? 'amber' : 'green'}
+              className="h-[52px] flex-1 text-base"
+              busy={openDraft.saving}
+              onClick={() => void submit(openBeer, reviewTypes)}
+            >
+              {openDraft.reviewed ? 'Update review' : 'Submit review'}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
+}
+
+function BeerChip({ live, reviewed, finalScore }: { live: boolean; reviewed: boolean; finalScore: number }) {
+  if (reviewed && finalScore >= 0) {
+    return <span className="shrink-0 rounded-full bg-ink px-2.5 py-1 text-xs font-bold text-white">Final {fmt(finalScore)}</span>
+  }
+  if (live) {
+    return <span className="shrink-0 rounded-full bg-pink px-2.5 py-1 text-xs font-bold text-white">Live</span>
+  }
+  if (reviewed) {
+    return <span className="shrink-0 rounded-full bg-[#ddf5e8] px-2.5 py-1 text-xs font-bold text-[#0f8a4e]">Sent</span>
+  }
+  return <span className="shrink-0 rounded-full bg-[#f1eeeb] px-2.5 py-1 text-xs font-bold text-muted">Up next</span>
 }
