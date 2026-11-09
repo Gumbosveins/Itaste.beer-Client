@@ -107,6 +107,15 @@ export default function Dashboard() {
         }),
       )
     },
+  }, (reconnected) => {
+    // Reviews and joins sent while the connection was down were missed, reload them
+    if (!reconnected) {
+      return
+    }
+    api
+      .getDashboard(roomCode, Number(pin))
+      .then((d) => setData((prev) => ({ ...d, beverages: [...d.beverages].sort((a, b) => a.displayOrder - b.displayOrder), blindRevealCode: d.blindRevealCode ?? prev?.blindRevealCode ?? null })))
+      .catch((e: unknown) => toast.error(errorMessage(e)))
   })
 
   const openBeer = async (beer: DashboardBeverage) => {

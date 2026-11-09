@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { BeerImage, Button, HIDDEN, IconButton, Logo, Spinner, TopBar } from '../components/ui'
@@ -41,28 +41,50 @@ export default function TasterRoom() {
   const [openId, setOpenId] = useState<number | null>(null)
   const [liveId, setLiveId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const liveRef = useRef<number | null>(null)
+  liveRef.current = liveId
 
   const missingSession = !session.userId || !session.pin || session.roomCode?.toUpperCase() !== roomCode.toUpperCase()
 
-  useEffect(() => {
-    if (missingSession) {
-      return
-    }
-    api
-      .getRoom(roomCode, Number(session.pin), session.userId!)
-      .then((data) => {
-        const ordered = { ...data, beverages: [...data.beverages].sort((a, b) => a.displayOrder - b.displayOrder) }
-        setRoom(ordered)
-        setDrafts(Object.fromEntries(ordered.beverages.map((b) => [b.beverageId, initialDraft(b)])))
-        const unlocked = ordered.beverages.find((b) => !b.isLocked)
-        if (unlocked) {
-          setOpenId(unlocked.beverageId)
-          setLiveId(unlocked.beverageId)
-        }
-      })
-      .catch((e: unknown) => setError(errorMessage(e)))
+  // Loads the room; on refresh keeps drafts the taster has not submitted yet
+  const loadRoom = useCallback(
+    (keepDrafts: boolean) => {
+      if (missingSession) {
+        return
+      }
+      api
+        .getRoom(roomCode, Number(session.pin), session.userId!)
+        .then((data) => {
+          const ordered = { ...data, beverages: [...data.beverages].sort((a, b) => a.displayOrder - b.displayOrder) }
+          setRoom(ordered)
+          setDrafts((prev) =>
+            Object.fromEntries(
+              ordered.beverages.map((b) => {
+                const fresh = initialDraft(b)
+                const existing = keepDrafts ? prev[b.beverageId] : undefined
+                return [b.beverageId, existing ? { ...existing, finalScore: fresh.finalScore } : fresh]
+              }),
+            ),
+          )
+          const unlocked = ordered.beverages.find((b) => !b.isLocked)
+          if (unlocked && liveRef.current !== unlocked.beverageId) {
+            setLiveId(unlocked.beverageId)
+            setOpenId(unlocked.beverageId)
+          }
+        })
+        .catch((e: unknown) => {
+          if (!keepDrafts) {
+            setError(errorMessage(e))
+          }
+        })
+    },
     // session values are read once per mount
-  }, [roomCode, missingSession])
+    [roomCode, missingSession],
+  )
+
+  useEffect(() => {
+    loadRoom(false)
+  }, [loadRoom])
 
   const patchDraft = useCallback((id: number, patch: Partial<BeerDraft>) => {
     setDrafts((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }))
@@ -79,7 +101,7 @@ export default function TasterRoom() {
     PushFinalScore: (data: FinalScoreEvent) => {
       window.setTimeout(() => patchDraft(data.beerId, { finalScore: data.finalScore }), FINAL_SCORE_DELAY_MS)
     },
-  })
+  }, () => loadRoom(true))
 
   const submit = async (beer: UserBeverage, reviewTypes: ReviewType[]) => {
     const draft = drafts[beer.beverageId]

@@ -7,10 +7,19 @@ type Handlers = Record<string, (payload: never) => void>
 /**
  * Connects to the BeerHub, joins the room group and keeps it joined across reconnects.
  * joinMethod is "JoinRoom" for the dashboard and "JoinRoomAsUser" for tasters.
+ * onJoined runs after every successful join (reconnected is true after a dropped connection),
+ * so callers can refetch state they may have missed while not in the group.
  */
-export function useBeerHub(roomCode: string | undefined, joinMethod: 'JoinRoom' | 'JoinRoomAsUser', handlers: Handlers): void {
+export function useBeerHub(
+  roomCode: string | undefined,
+  joinMethod: 'JoinRoom' | 'JoinRoomAsUser',
+  handlers: Handlers,
+  onJoined?: (reconnected: boolean) => void,
+): void {
   const handlersRef = useRef(handlers)
   handlersRef.current = handlers
+  const joinedRef = useRef(onJoined)
+  joinedRef.current = onJoined
 
   useEffect(() => {
     if (!roomCode) {
@@ -26,9 +35,13 @@ export function useBeerHub(roomCode: string | undefined, joinMethod: 'JoinRoom' 
       connection.on(event, (payload: never) => handlersRef.current[event]?.(payload))
     })
 
-    const join = () => connection.invoke(joinMethod, roomCode).catch((err: unknown) => console.error('Hub join failed', err))
+    const join = (reconnected: boolean) =>
+      connection
+        .invoke(joinMethod, roomCode)
+        .then(() => joinedRef.current?.(reconnected))
+        .catch((err: unknown) => console.error('Hub join failed', err))
     connection.onreconnected(() => {
-      void join()
+      void join(true)
     })
 
     let cancelled = false
@@ -36,7 +49,7 @@ export function useBeerHub(roomCode: string | undefined, joinMethod: 'JoinRoom' 
       .start()
       .then(() => {
         if (!cancelled) {
-          void join()
+          void join(false)
         }
       })
       .catch((err: unknown) => console.error('Hub connection failed', err))
