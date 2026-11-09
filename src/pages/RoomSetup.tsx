@@ -162,7 +162,7 @@ export default function RoomSetup() {
             {searching && (
               <div className="flex justify-center text-pink"><Spinner className="h-8 w-8" /></div>
             )}
-            {!searching && searched && visibleResults.length === 0 && (
+            {!searching && searched && results.length === 0 && (
               <p className="text-center text-ink/60">No beers found. Try Search Untappd.</p>
             )}
             {!searching && visibleResults.length > 0 && (
