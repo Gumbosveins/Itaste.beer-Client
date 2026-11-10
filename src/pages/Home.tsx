@@ -27,7 +27,23 @@ export default function Home() {
           Everyone rates on their phone. The results land on the big screen the moment the last vote is in.
         </p>
 
-        <div className="mt-9 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+        {canContinue && (
+          <Link
+            to={`/userRoom/${session.roomCode}`}
+            className="mt-9 flex w-full max-w-[496px] items-center gap-3.5 rounded-[18px] border border-white/30 bg-white/15 px-5 py-4 transition hover:bg-white/20"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white font-extrabold text-pink">
+              {session.username?.charAt(0).toUpperCase()}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[13px] text-white/80">Pick up where you left off</span>
+              <span className="block truncate text-[17px] font-bold">{session.username}</span>
+            </span>
+            <span className="rounded-[10px] bg-white px-3 pt-1 font-display text-[26px] tracking-[0.2em] text-pink">{session.roomCode}</span>
+          </Link>
+        )}
+
+        <div className={`${canContinue ? 'mt-4' : 'mt-9'} flex w-full flex-col gap-4 sm:w-auto sm:flex-row`}>
           <Link
             to="/create"
             className="flex h-16 items-center justify-center gap-2.5 rounded-[18px] bg-white px-7 text-lg font-bold text-pink shadow-[0_10px_30px_rgba(120,0,40,0.25)] transition hover:-translate-y-0.5 sm:min-w-60"
@@ -66,21 +82,18 @@ export default function Home() {
           </Link>
         </nav>
 
-        {canContinue && (
-          <Link
-            to={`/userRoom/${session.roomCode}`}
-            className="mt-9 flex w-full max-w-[460px] items-center gap-3.5 rounded-[18px] border border-white/30 bg-white/15 px-5 py-4 transition hover:bg-white/20"
-          >
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white font-extrabold text-pink">
-              {session.username?.charAt(0).toUpperCase()}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[13px] text-white/80">Pick up where you left off</span>
-              <span className="block truncate text-[17px] font-bold">{session.username}</span>
-            </span>
-            <span className="rounded-[10px] bg-white px-3 pt-1 font-display text-[26px] tracking-[0.2em] text-pink">{session.roomCode}</span>
-          </Link>
-        )}
+        <aside
+          aria-label="Budweiser Budvar"
+          className="mt-10 flex w-full items-center gap-5 overflow-hidden rounded-[18px] bg-[#f7f0e1] py-3 pl-5 pr-8 sm:w-auto text-left text-[#1f1a17] shadow-[0_14px_36px_rgba(120,0,40,0.22)] ring-2 ring-[#c9a24a]/60"
+        >
+          <img src="/images/budvar.png" alt="Budweiser Budvar bottle" className="h-32 w-12 shrink-0 object-cover mix-blend-multiply sm:h-36 sm:w-14" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-[#a8862f]">Original Czech Lager</span>
+            <span className="mt-0.5 block font-serif text-2xl font-bold italic leading-tight text-[#d7262b] sm:text-[28px]">Budweiser Budvar</span>
+            <span className="mt-1 block text-[13px] text-[#5a524c]">Brewed in České Budějovice since 1895</span>
+          </span>
+        </aside>
+
 
         <p className="mt-12 text-center text-sm text-white/75">
           Bugs or ideas? <a className="font-semibold text-white underline" href="mailto:gumbosveins@gmail.com">gumbosveins@gmail.com</a>
