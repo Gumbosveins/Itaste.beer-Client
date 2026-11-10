@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /userRoom/
+Disallow: /roomcreate/
+
+Sitemap: https://itaste.beer/sitemap.xml
