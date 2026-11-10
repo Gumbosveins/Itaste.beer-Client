@@ -82,17 +82,20 @@ export default function Home() {
           </Link>
         </nav>
 
-        <aside
-          aria-label="Budweiser Budvar"
-          className="mt-10 flex w-full items-center gap-5 overflow-hidden rounded-[18px] bg-[#f7f0e1] py-3 pl-5 pr-8 sm:w-auto text-left text-[#1f1a17] shadow-[0_14px_36px_rgba(120,0,40,0.22)] ring-2 ring-[#c9a24a]/60"
+        <a
+          href="https://www.vinbudin.is/heim/vorur/stoek-vara.aspx/?productid=05541/"
+          target="_blank"
+          rel="noopener sponsored"
+          aria-label="Budweiser Budvar at Vínbúðin"
+          className="group mt-10 flex w-full items-center gap-5 overflow-hidden rounded-[18px] bg-[#f7f0e1] py-3 pl-5 pr-8 sm:w-auto text-left text-[#1f1a17] shadow-[0_14px_36px_rgba(120,0,40,0.22)] ring-2 ring-[#c9a24a]/60 transition hover:-translate-y-0.5"
         >
-          <img src="/images/budvar.png" alt="Budweiser Budvar bottle" className="h-32 w-12 shrink-0 object-cover mix-blend-multiply sm:h-36 sm:w-14" />
+          <img src="/images/budvar.png" alt="Budweiser Budvar bottle" className="h-32 w-12 shrink-0 object-cover mix-blend-multiply transition group-hover:-rotate-3 sm:h-36 sm:w-14" />
           <span className="min-w-0 flex-1">
             <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-[#a8862f]">Original Czech Lager</span>
             <span className="mt-0.5 block font-serif text-2xl font-bold italic leading-tight text-[#d7262b] sm:text-[28px]">Budweiser Budvar</span>
             <span className="mt-1 block text-[13px] text-[#5a524c]">Brewed in České Budějovice since 1895</span>
           </span>
-        </aside>
+        </a>
 
 
         <p className="mt-12 text-center text-sm text-white/75">
