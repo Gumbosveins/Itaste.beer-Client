@@ -15,7 +15,7 @@ export default function Home() {
       </header>
 
       <main className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-16">
-        <img src="/images/logo.png" alt="iTaste Beer Tasting" className="mt-2 w-64 drop-shadow-xl sm:w-[360px]" />
+        <img src="/images/logo.png" alt="iTaste Beer Tasting" className="mt-2 w-52 drop-shadow-xl sm:w-64" />
         <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-sm font-semibold ring-1 ring-white/30">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z" />

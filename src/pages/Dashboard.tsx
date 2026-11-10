@@ -234,7 +234,7 @@ export default function Dashboard() {
       />
       {!data && (
         <div className="flex flex-1 flex-col items-center justify-center bg-pink">
-          <Logo className="w-80" />
+          <Logo className="w-60" />
           <Spinner className="mt-6 h-10 w-10 text-white" />
         </div>
       )}

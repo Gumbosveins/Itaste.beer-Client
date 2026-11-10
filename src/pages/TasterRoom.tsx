@@ -133,7 +133,7 @@ export default function TasterRoom() {
       <div className="min-h-screen bg-amber">
         <TopBar title="Taster room" />
         <main className="mx-auto max-w-md px-4 pt-8 text-center text-white">
-          <Logo className="w-48" />
+          <Logo className="w-40" />
           <p className="mt-6 text-lg font-medium">{error ?? 'Join the room first to start rating.'}</p>
           <Link to="/join" className="mt-6 inline-block rounded-xl bg-white px-5 py-3 font-semibold text-amber shadow">Join a room</Link>
         </main>

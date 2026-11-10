@@ -102,7 +102,7 @@ export function FormPage({ title, color = 'bg-pink', children }: { title: string
     <div className={`min-h-screen ${color}`}>
       <TopBar title={title} />
       <main className="mx-auto max-w-md px-4 pb-16 pt-6">
-        <Logo className="mb-6 w-56" />
+        <Logo className="mb-6 w-40" />
         {children}
       </main>
     </div>

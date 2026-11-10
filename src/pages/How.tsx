@@ -26,7 +26,7 @@ export default function How() {
     <div className="min-h-screen bg-pink">
       <TopBar title="How it works" />
       <main className="mx-auto max-w-3xl px-4 pb-16 pt-6">
-        <Logo className="w-56" />
+        <Logo className="w-44" />
 
         <Section title="Create a room">
           <p className="mt-2 text-ink/75">
