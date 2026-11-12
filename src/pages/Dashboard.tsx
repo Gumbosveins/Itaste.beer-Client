@@ -2,14 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { IconButton, Logo, Spinner, TopBar } from '../components/ui'
-import { EyeIcon, EyeOffIcon, PowerIcon } from '../components/icons'
+import { EditIcon, EyeIcon, EyeOffIcon, PowerIcon } from '../components/icons'
+import { EditRoomPanel } from '../components/EditRoomPanel'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { BeerList, CurrentBeer, Leaderboard, ResultReveal, UserList, type RevealState } from '../components/DashboardPanels'
 import { DonateButton } from '../components/DonateButton'
-import { api, errorMessage } from '../lib/api'
+import { api, editRoom, errorMessage } from '../lib/api'
 import { useBeerHub } from '../lib/hub'
 import { clearSession } from '../lib/session'
 import { counted, flashColor, playSound, soundForScore, type FlashColor } from '../lib/scoring'
-import type { BeverageReview, Dashboard as DashboardData, DashboardBeverage, NewUserJoinedEvent } from '../lib/types'
+import type { BeverageReview, Dashboard as DashboardData, DashboardBeverage, DashboardUser, NewUserJoinedEvent } from '../lib/types'
 
 const FLASH_MS = 2500
 const REVEAL_STEP_MS = 1000
@@ -54,11 +56,13 @@ export default function Dashboard() {
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), [])
 
+  const sortBeverages = (d: DashboardData): DashboardData => ({ ...d, beverages: [...d.beverages].sort((a, b) => a.displayOrder - b.displayOrder) })
+
   useEffect(() => {
     api
       .getDashboard(roomCode, Number(pin))
       .then((d) => {
-        setData({ ...d, beverages: [...d.beverages].sort((a, b) => a.displayOrder - b.displayOrder) })
+        setData(sortBeverages(d))
         setHidden(d.isBlind)
         const unlocked = d.beverages.find((b) => !b.isLocked && !b.reviewFinished)
         setCurrentId(unlocked?.beverageId ?? null)
@@ -68,6 +72,21 @@ export default function Dashboard() {
         navigate('/opendashboard')
       })
   }, [roomCode, pin, navigate])
+
+  // Reload after edits; keeps the open beer and any running reveal on screen
+  const reload = useCallback(async () => {
+    try {
+      const d = await api.getDashboard(roomCode, Number(pin))
+      setData((prev) => ({ ...sortBeverages(d), blindRevealCode: d.blindRevealCode ?? prev?.blindRevealCode ?? null }))
+      setCurrentId((id) => (id !== null && d.beverages.some((b) => b.beverageId === id) ? id : null))
+    } catch (e) {
+      toast.error(errorMessage(e))
+    }
+  }, [roomCode, pin])
+
+  const [editing, setEditing] = useState(false)
+  const [pendingUser, setPendingUser] = useState<DashboardUser | null>(null)
+  const [removingUser, setRemovingUser] = useState(false)
 
   useBeerHub(data ? roomCode : undefined, 'JoinRoom', {
     NewUserJoined: (user: NewUserJoinedEvent) => {
@@ -108,15 +127,12 @@ export default function Dashboard() {
         }),
       )
     },
-  }, (reconnected) => {
-    // Reviews and joins sent while the connection was down were missed, reload them
-    if (!reconnected) {
-      return
-    }
-    api
-      .getDashboard(roomCode, Number(pin))
-      .then((d) => setData((prev) => ({ ...d, beverages: [...d.beverages].sort((a, b) => a.displayOrder - b.displayOrder), blindRevealCode: d.blindRevealCode ?? prev?.blindRevealCode ?? null })))
-      .catch((e: unknown) => toast.error(errorMessage(e)))
+    RoomUpdated: () => {
+      void reload()
+    },
+  }, () => {
+    // Joins and reviews sent before this screen was in the group were missed, reload them
+    void reload()
   })
 
   const openBeer = async (beer: DashboardBeverage) => {
@@ -161,25 +177,20 @@ export default function Dashboard() {
     }
   }
 
-  const deleteUser = async (userId: string, username: string) => {
-    const typed = window.prompt(`Type "${username}" to remove this taster from the room`)
-    if (typed !== username) {
+  const removeUser = async () => {
+    if (!pendingUser) {
       return
     }
+    setRemovingUser(true)
     try {
-      await api.deleteUser(userId)
-      toast.success(`${username} removed`)
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              users: prev.users.filter((u) => u.id !== userId),
-              beverages: prev.beverages.map((b) => ({ ...b, reviews: b.reviews.filter((r) => r.userId !== userId) })),
-            }
-          : prev,
-      )
+      const result = await editRoom.removeUser(roomCode, Number(pin), pendingUser.id)
+      toast.success(result.message)
+      setPendingUser(null)
+      await reload()
     } catch (e) {
       toast.error(errorMessage(e))
+    } finally {
+      setRemovingUser(false)
     }
   }
 
@@ -228,6 +239,7 @@ export default function Dashboard() {
             {data?.isBlind && (
               <IconButton label={hidden ? 'Reveal beers' : 'Hide beers'} onClick={toggleHidden}>{hidden ? <EyeIcon /> : <EyeOffIcon />}</IconButton>
             )}
+            {data && <IconButton label="Edit room" onClick={() => setEditing(true)}><EditIcon /></IconButton>}
             <IconButton label="Close dashboard" onClick={logout}><PowerIcon /></IconButton>
           </>
         }
@@ -257,11 +269,19 @@ export default function Dashboard() {
                 onFinish={() => void finishReview(current)}
               />
             ) : (
-              <UserList users={data.users} roomCode={data.code} onDelete={(id, name) => void deleteUser(id, name)} />
+              <UserList users={data.users} roomCode={data.code} onDelete={(id) => setPendingUser(data.users.find((u) => u.id === id) ?? null)} />
             )}
           </section>
           <Leaderboard data={data} hidden={hidden} />
         </div>
+      )}
+      {editing && data && (
+        <EditRoomPanel data={data} pin={Number(pin)} hidden={hidden} currentId={currentId} onClose={() => setEditing(false)} onChanged={reload} />
+      )}
+      {pendingUser && (
+        <ConfirmDialog title={`Remove ${pendingUser.username}?`} confirmLabel="Remove" busy={removingUser} onCancel={() => setPendingUser(null)} onConfirm={() => void removeUser()}>
+          They are sent back to the front page and can join again with the room code.
+        </ConfirmDialog>
       )}
     </div>
   )

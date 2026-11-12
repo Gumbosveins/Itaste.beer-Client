@@ -25,3 +25,9 @@ export const ChevronIcon = ({ open }: { open: boolean }) => (
     <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
   </svg>
 )
+
+export const EditIcon = () => (
+  <svg viewBox="0 0 24 24" className={base} aria-hidden>
+    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+  </svg>
+)

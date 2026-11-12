@@ -32,8 +32,8 @@ async function readError(res: Response): Promise<string> {
   return text
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}/api/Taster/${path}`, {
+async function request<T>(path: string, init?: RequestInit, controller = 'Taster'): Promise<T> {
+  const res = await fetch(`${API_URL}/api/${controller}/${path}`, {
     ...init,
     headers: { 'Content-Type': 'application/json', ...init?.headers },
   })
@@ -71,7 +71,6 @@ export const api = {
   joinRoom: async (body: { roomCode: string; pin: number; username: string }) =>
     ensureOk(await post<JoinRoomResult>('JoinRoom', body)),
 
-  deleteUser: async (userId: string) => ensureOk(await post<ApiResult>('DeleteUser', { userId })),
 
   addReview: async (body: {
     beverageId: number
@@ -97,6 +96,26 @@ export const api = {
 
   finishReview: async (roomCode: string, beerId: number) =>
     ensureOk(await request<ReviewResults>(`FinishReview?${q({ roomCode, beerId })}`)),
+}
+
+const edit = async (path: string, body: { roomCode: string; pin: number } & Record<string, unknown>) =>
+  ensureOk(await request<ApiResult>(path, { method: 'POST', body: JSON.stringify(body) }, 'EditRoom'))
+
+export interface EditCategory {
+  id: number
+  name: string
+  abbr: string
+  isNew: boolean
+  maxValue: number
+  displayOrder: number
+}
+
+export const editRoom = {
+  addBeverages: (roomCode: string, pin: number, beverageIds: number[]) => edit('AddBeverages', { roomCode, pin, beverageIds }),
+  removeBeverage: (roomCode: string, pin: number, beverageId: number) => edit('RemoveBeverage', { roomCode, pin, beverageId }),
+  reorderBeverages: (roomCode: string, pin: number, beverageIds: number[]) => edit('ReorderBeverages', { roomCode, pin, beverageIds }),
+  updateCategories: (roomCode: string, pin: number, categories: EditCategory[]) => edit('UpdateCategories', { roomCode, pin, categories }),
+  removeUser: (roomCode: string, pin: number, userId: string) => edit('RemoveUser', { roomCode, pin, userId }),
 }
 
 export function errorMessage(error: unknown): string {

@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from 'react'
 import { Link } from 'react-router'
 
-type Variant = 'pink' | 'amber' | 'dark' | 'ghost' | 'green'
+type Variant = 'pink' | 'amber' | 'dark' | 'ghost' | 'green' | 'danger'
 
 const VARIANTS: Record<Variant, string> = {
   pink: 'bg-pink text-white hover:bg-pink-dark',
@@ -9,6 +9,7 @@ const VARIANTS: Record<Variant, string> = {
   dark: 'bg-ink text-white hover:bg-black',
   green: 'bg-[#0f9d58] text-white shadow-[0_6px_16px_rgba(15,157,88,0.3)] hover:brightness-95',
   ghost: 'bg-white text-ink ring-1 ring-black/10 hover:bg-foam',
+  danger: 'bg-[#d03a3a] text-white hover:bg-[#b92f2f]',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

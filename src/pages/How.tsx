@@ -199,7 +199,7 @@ export default function How() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               ['Back in the room', 'Closed the browser by accident? The front page lets you pick up where you left off.'],
-              ['Remove a taster', 'Hover a name in the taster list on the dashboard before the first beer is opened.'],
+              ['Change of plans?', 'Press the pencil on the dashboard to add, remove or reorder beers, or remove a taster, even mid tasting.'],
               ['Any screen works', 'The dashboard runs in any browser: a TV, a laptop or a shared screen on a video call.'],
             ].map(([title, text]) => (
               <div key={title} className="panel p-5">
