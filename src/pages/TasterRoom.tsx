@@ -101,6 +101,14 @@ export default function TasterRoom() {
     PushFinalScore: (data: FinalScoreEvent) => {
       window.setTimeout(() => patchDraft(data.beerId, { finalScore: data.finalScore }), FINAL_SCORE_DELAY_MS)
     },
+    RoomUpdated: () => loadRoom(true),
+    UserRemoved: (userId: string) => {
+      if (userId === session.userId) {
+        clearSession()
+        setRoom(null)
+        setError('The host removed you from this room. Join again with the room code if that was a mistake.')
+      }
+    },
   }, () => loadRoom(true))
 
   const submit = async (beer: UserBeverage, reviewTypes: ReviewType[]) => {
@@ -225,7 +233,7 @@ export default function TasterRoom() {
                       <input
                         value={draft.comment}
                         onChange={(e) => patchDraft(beer.beverageId, { comment: e.target.value })}
-                        maxLength={300}
+                        maxLength={250}
                         className="mt-1.5 h-11 w-full rounded-xl border-[1.5px] border-[#e6e0db] px-3 text-[15px] font-normal text-ink outline-none focus:border-pink"
                       />
                     </label>
